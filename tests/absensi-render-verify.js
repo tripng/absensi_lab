@@ -1,0 +1,34 @@
+import { chromium } from 'playwright-core';
+import { join } from 'path';
+import { homedir } from 'os';
+
+const browser = await chromium.launch({
+  headless: true,
+  channel: undefined,
+  executablePath: process.env.PW_CHROME || join(homedir(), '.cache/ms-playwright/chromium-1155/chrome-linux/chrome'),
+});
+
+const page = await browser.newPage({
+  viewport: { width: 1440, height: 900 },
+});
+await page.goto('http://127.0.0.1:8000/absensi', { waitUntil: 'networkidle' });
+await new Promise(r => setTimeout(r, 1500));
+
+const results = {
+  title: await page.title(),
+  hasHeading: await page.isVisible('text=Kalender Absensi Lab Komputer'),
+  hasLiveBadge: await page.isVisible('text=Live Realtime'),
+  hasExportBtn: await page.isVisible('button:has-text("Unduh Laporan Harian")'),
+  hasPrintBtn: await page.isVisible('button:has-text("Cetak Rekap")'),
+  metricCards: await page.$$eval('div.bg-surface-container-lowest', els => els.length),
+  employeeCards: await page.$$eval('.employee-card', els => els.length),
+  hasFilterTabs: await page.isVisible('button:has-text("Semua")'),
+  hasSearch: await page.isVisible('input[placeholder*="Cari"]'),
+  hasCalendarHeader: await page.isVisible('text=Grid Kehadiran Bulanan'),
+  hasMonthNav: await page.isVisible('text=Oktober 2026'),
+};
+
+console.log(JSON.stringify(results, null, 2));
+await page.screenshot({ path: '/tmp/absensi_render.png', fullPage: true });
+await browser.close();
+console.log('Screenshot: /tmp/absensi_render.png');

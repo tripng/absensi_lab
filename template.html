@@ -1,0 +1,746 @@
+<!DOCTYPE html><html lang="id" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"secondary-container":"#39b8fd","surface-bright":"#faf8ff","on-surface":"#131b2e","on-tertiary-fixed-variant":"#005236","surface-container-low":"#f2f3ff","on-background":"#131b2e","on-tertiary":"#ffffff","tertiary-fixed":"#6ffbbe","on-tertiary-container":"#4ddda2","on-primary":"#ffffff","surface-variant":"#dae2fd","inverse-on-surface":"#eef0ff","error-container":"#ffdad6","on-primary-container":"#c1beff","outline-variant":"#c7c4d7","surface-container":"#eaedff","tertiary-container":"#005e3f","on-surface-variant":"#464554","secondary-fixed-dim":"#89ceff","on-error-container":"#93000a","primary-fixed":"#e3dfff","surface-tint":"#5148d7","surface-dim":"#d2d9f4","error":"#ba1a1a","background":"#faf8ff","primary-container":"#4338ca","primary":"#2a14b4","primary-fixed-dim":"#c3c0ff","on-secondary-container":"#004666","on-secondary-fixed-variant":"#004c6e","secondary-fixed":"#c9e6ff","surface-container-lowest":"#ffffff","secondary":"#006591","on-primary-fixed-variant":"#372abf","surface":"#faf8ff","tertiary":"#00442d","inverse-surface":"#283044","on-primary-fixed":"#100069","inverse-primary":"#c3c0ff","surface-container-highest":"#dae2fd","surface-container-high":"#e2e7ff","on-secondary-fixed":"#001e2f","on-secondary":"#ffffff","on-tertiary-fixed":"#002113","on-error":"#ffffff","outline":"#777586","tertiary-fixed-dim":"#4edea3"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter":"1.5rem","space-sm":"0.5rem","space-xl":"2rem","margin":"2rem","space-md":"1rem","space-xs":"0.25rem","gutter-mobile":"0.75rem","space-lg":"1.5rem","margin-mobile":"1rem"},"fontFamily":{"body-sm":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"display":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"]},"fontSize":{"body-sm":["0.75rem",{"lineHeight":"1.125rem","fontWeight":"400"}],"headline-lg":["2rem",{"lineHeight":"2.5rem","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-md":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.015em","fontWeight":"600"}],"label-sm":["0.6875rem",{"lineHeight":"0.875rem","letterSpacing":"0.04em","fontWeight":"700"}],"display":["3rem",{"lineHeight":"3.5rem","letterSpacing":"-0.025em","fontWeight":"700"}],"body-lg":["1rem",{"lineHeight":"1.5rem","fontWeight":"400"}],"body-md":["0.875rem",{"lineHeight":"1.375rem","fontWeight":"400"}],"headline-sm":["1.125rem",{"lineHeight":"1.75rem","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.02em","fontWeight":"600"}],"label-lg":["0.875rem",{"lineHeight":"1.25rem","letterSpacing":"0.01em","fontWeight":"600"}],"headline-lg-mobile":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.015em","fontWeight":"700"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center justify-between"><div class="flex items-center gap-space-xs"><img alt="PresensiPlus Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vxmr5ox9Dl32LB1jxP_EoWcSYU5tMxzbCTwtZ67Cmlio6muYm8ZMR_d3oAiDtxXuDWfG8xxySJp2BELSfC_uD7ZqxoCRzNwsgg06ZdQLH3Sbnz1IPNdd9RlSwhAv4IKnJMjfc0Y-Bs9iLVg86y0Vri6-fD-VtvL2k33Lj773cbAtkonhrFYrSkt4YvzhJEeXAn-d-Mrn2IZOAAQ0wLCs--TJGTjnX2zQMss3Up_NkDJ12Sd0mGohakAg1-"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight ml-space-xs">Presensi LAB</span></div></div><div class="px-space-md pt-space-xs pb-space-sm"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Navigasi Utama</span></div><nav class="flex flex-col gap-space-xs px-space-sm" data-active-classes="bg-primary-container text-on-primary font-semibold shadow-[0_1px_3px_0_rgba(15,23,42,0.05)]"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg transition-colors bg-primary-container text-on-primary font-semibold shadow-[0_1px_3px_0_rgba(15,23,42,0.05)]" data-path="kalender-absensi" href="#"><span class="material-symbols-outlined text-[20px]">calendar_month</span><span class="">Kalender Absensi</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="rekap-kehadiran" href="#"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="">Rekap Kehadiran</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="daftar-karyawan" href="#"><span class="material-symbols-outlined text-[20px]">groups</span><span class="">Daftar Karyawan</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="laporan-dan-analitik" href="#"><span class="material-symbols-outlined text-[20px]">monitoring</span><span class="">Laporan &amp; Analitik</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pengaturan" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="">Pengaturan</span></a></nav></div><div class="p-space-md m-space-sm bg-surface-container rounded-xl flex items-center gap-space-sm"><div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-on-primary-fixed"></div><div class="flex flex-col"></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs text-on-surface-variant font-body-md text-body-md"><span class="font-medium text-outline">Kehadiran</span><span class="material-symbols-outlined text-[16px] text-outline">chevron_right</span><span class="font-semibold text-on-surface">Manajemen Absensi</span></div><div class="relative ml-space-md w-80"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-outline">search</span><input class="w-full h-10 pl-9 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Cari karyawan, tanggal, atau departemen..." type="text"></div></div><div class="flex items-center gap-space-md"><button aria-label="Notifikasi" class="relative w-10 h-10 rounded-lg bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-colors" type="button"></button><div class="h-8 w-px bg-outline-variant"></div><div class="flex items-center gap-space-sm pl-space-xs"><div class="flex flex-col text-left"></div></div></div></header><main class="relative pt-16 w-full px-space-lg bg-background"><div class="flex flex-col w-full">
+<!-- Top Intro & Control Deck -->
+<div class="pt-space-md pb-space-lg flex flex-col gap-space-md">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Kalender Absensi Lab Komputer</span>
+<span class="px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider font-semibold">Live Realtime</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+          Pilih tanggal untuk melihat detail siapa saja yang masuk presisi dan terverifikasi biometrik.
+        </p>
+</div>
+<!-- Action Utilities -->
+<div class="flex items-center flex-wrap gap-space-sm">
+<button class="px-space-md h-10 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-space-xs transition-all shadow-sm" id="btn-export-daily">
+<span class="material-symbols-outlined text-[18px] text-primary">download</span>
+<span class="">Unduh Laporan Harian</span>
+</button>
+<button class="px-space-md h-10 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-space-xs transition-all shadow-sm" id="btn-print-summary">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">print</span>
+<span class="">Cetak Rekap</span>
+</button>
+
+</div>
+</div>
+<!-- Calendar Navigation & Filter Strip -->
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-space-md">
+<!-- Month & Day switcher -->
+<div class="flex items-center flex-wrap gap-space-sm">
+<div class="flex items-center bg-surface-container-low rounded-lg p-1">
+<button aria-label="Bulan Sebelumnya" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors" id="prev-month">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<div class="px-space-md flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">calendar_today</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Oktober 2026</span>
+</div>
+<button aria-label="Bulan Berikutnya" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors" id="next-month">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+<button class="px-space-md h-10 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors" id="btn-today">
+          Hari Ini
+        </button>
+<div class="h-6 w-px bg-surface-container hidden sm:block"></div>
+<!-- Filter Departemen -->
+<div class="relative">
+
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[18px] text-primary pointer-events-none">domain</span>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-[18px] text-outline pointer-events-none">expand_more</span>
+</div>
+<!-- Filter Status Kehadiran Global -->
+<div class="relative">
+
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[18px] text-secondary pointer-events-none">filter_alt</span>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-[18px] text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Quick Mode Toggle -->
+<div class="flex items-center gap-space-xs self-end xl:self-auto bg-surface-container-low p-1 rounded-lg">
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest shadow-sm text-primary font-label-md text-label-md font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">calendar_view_month</span>
+<span class="">Bulan</span>
+</button>
+<button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">calendar_view_week</span>
+<span class="">Minggu</span>
+</button>
+<button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">calendar_view_day</span>
+<span class="">Hari</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Realtime Metric Badges for Selected Date (Kamis, 24 Oktober 2024) -->
+<div class="mb-space-lg grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-space-md">
+<!-- Card 1: Total Staff -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold">Total Karyawan</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</div>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface">148</span>
+<span class="font-body-sm text-body-sm text-outline">Karyawan Aktif</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-tertiary font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+          100% Terdaftar
+        </span>
+<span class="text-outline">Shift 1 &amp; 2</span>
+</div>
+</div>
+<!-- Card 2: On-Time -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-tertiary-container font-bold">Tepat Waktu</span>
+<div class="w-8 h-8 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed-variant flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg font-bold text-tertiary">132</span>
+<span class="font-label-md text-label-md px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-bold">89.2%</span>
+</div>
+<div class="mt-space-sm w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-tertiary-container h-full rounded-full" style="width: 89.2%"></div>
+</div>
+</div>
+<!-- Card 3: Late -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden hover:shadow-md transition-shadow">
+
+
+<div class="mt-space-sm w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 4.7%"></div>
+</div>
+</div>
+<!-- Card 4: Leaves & Permits -->
+
+<!-- Card 5: Absent / Alpha -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between relative overflow-hidden col-span-2 md:col-span-1 hover:shadow-md transition-shadow">
+
+
+<div class="mt-space-sm w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 2.0%"></div>
+</div>
+</div>
+</div>
+<!-- Main Canvas: 60% Interactive Calendar + 40% Detail Drill-down Panel -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start pb-space-xl">
+<!-- LEFT COLUMN: Dynamic Monthly Calendar Canvas (~60%) -->
+<div class="xl:col-span-7 bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<!-- Calendar Header Label & Month Meta -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-2.5 h-7 bg-primary rounded-full"></div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Grid Kehadiran Bulanan</h2>
+<p class="font-body-sm text-body-sm text-outline">Klik sel tanggal untuk memuat rincian staf harian di panel kanan.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+
+</div>
+</div>
+<!-- 7-Column Day Abbreviation Header -->
+<div class="grid grid-cols-7 gap-1 text-center py-2 bg-surface-container-low rounded-lg font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">
+<div class="">Sen</div>
+<div class="">Sel</div>
+<div class="">Rab</div>
+<div class="">Kam</div>
+<div class="">Jum</div>
+<div class="text-secondary font-bold">Sab</div>
+<div class="text-error font-bold">Min</div>
+</div>
+<!-- Calendar 35-Cell Matrix (October 2024: Started Tuesday 1 Oct) -->
+<div class="grid grid-cols-7 gap-1.5">
+<!-- Sept 30 (Previous month spillover) -->
+<div class="min-h-[102px] p-1.5 rounded-lg bg-surface-container-low/40 opacity-45 flex flex-col justify-between">
+<span class="text-right font-label-md text-label-md text-outline">30</span>
+<div class="text-center font-body-sm text-body-sm text-outline">-</div>
+</div>
+<!-- Oct 1 -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary">1</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest font-medium text-tertiary flex items-center justify-between">
+<span class="">Hadir</span><strong>140</strong>
+</span>
+<span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest font-medium text-secondary flex items-center justify-between">
+<span class="">Late</span><strong>5</strong>
+</span>
+</div>
+</div>
+<!-- Oct 2 -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary">2</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest font-medium text-tertiary flex items-center justify-between">
+<span class="">Hadir</span><strong>142</strong>
+</span>
+<span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest font-medium text-primary flex items-center justify-between">
+<span class="">Cuti</span><strong>4</strong>
+</span>
+</div>
+</div>
+<!-- Oct 3 -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary">3</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest font-medium text-tertiary flex items-center justify-between">
+<span class="">Hadir</span><strong>138</strong>
+</span>
+<span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest font-medium text-secondary flex items-center justify-between">
+<span class="">Late</span><strong>8</strong>
+</span>
+</div>
+</div>
+<!-- Oct 4 -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary">4</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest font-medium text-tertiary flex items-center justify-between">
+<span class="">Hadir</span><strong>139</strong>
+</span>
+<span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest font-medium text-error flex items-center justify-between">
+<span class="">Alpha</span><strong>2</strong>
+</span>
+</div>
+</div>
+<!-- Oct 5 (Weekend) -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/30 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between">
+<div class="flex justify-end">
+<span class="font-label-md text-label-md text-outline">5</span>
+</div>
+<div class="text-center">
+<span class="font-label-sm text-label-sm text-outline px-1.5 py-0.5 rounded bg-surface-container">Libur</span>
+</div>
+</div>
+<!-- Oct 6 (Sunday) -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/30 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between">
+<div class="flex justify-end">
+<span class="font-label-md text-label-md text-error/60">6</span>
+</div>
+<div class="text-center">
+<span class="font-label-sm text-label-sm text-outline px-1.5 py-0.5 rounded bg-surface-container">Libur</span>
+</div>
+</div>
+<!-- Oct 7 - 13 (Week 2) -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">7</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>144</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">8</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>141</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">9</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-secondary flex justify-between"><span class="">Late</span><strong>9</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">10</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-primary flex justify-between"><span class="">Cuti</span><strong>7</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">11</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>137</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/30 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between">
+<div class="flex justify-end"><span class="font-label-md text-label-md text-outline">12</span></div>
+<div class="text-center"><span class="font-label-sm text-label-sm text-outline px-1.5 py-0.5 rounded bg-surface-container">Libur</span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/30 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between">
+<div class="flex justify-end"><span class="font-label-md text-label-md text-error/60">13</span></div>
+<div class="text-center"><span class="font-label-sm text-label-sm text-outline px-1.5 py-0.5 rounded bg-surface-container">Libur</span></div>
+</div>
+<!-- Oct 14 - 20 (Week 3) -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">14</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>143</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">15</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>139</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">16</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-secondary flex justify-between"><span class="">Late</span><strong>6</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">17</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>145</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">18</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-error flex justify-between"><span class="">Alpha</span><strong>1</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/30 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between">
+<div class="flex justify-end"><span class="font-label-md text-label-md text-outline">19</span></div>
+<div class="text-center"><span class="font-label-sm text-label-sm text-outline px-1.5 py-0.5 rounded bg-surface-container">Libur</span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/30 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between">
+<div class="flex justify-end"><span class="font-label-md text-label-md text-error/60">20</span></div>
+<div class="text-center"><span class="font-label-sm text-label-sm text-outline px-1.5 py-0.5 rounded bg-surface-container">Libur</span></div>
+</div>
+<!-- Oct 21 - 27 (Week 4: Contains Selected 24 Oct) -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">21</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>138</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">22</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-secondary flex justify-between"><span class="">Late</span><strong>5</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">23</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-primary flex justify-between"><span class="">Cuti</span><strong>4</strong></span></div>
+</div>
+<!-- SELECTED CELL: 24 OKTOBER 2024 (Heroic active state) -->
+<div class="min-h-[102px] p-2 rounded-lg bg-primary-fixed/40 shadow-md relative flex flex-col justify-between transform scale-[1.02] z-10 transition-transform">
+<div class="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[10px]">check</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="px-1.5 py-0.2 rounded bg-primary text-on-primary font-label-sm text-label-sm uppercase font-bold tracking-wider">Aktif</span>
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md font-bold">24</span>
+</div>
+<div class="flex flex-col gap-1 mt-1">
+<div class="flex items-center justify-between text-[11px] font-bold text-tertiary bg-surface-container-lowest/90 px-1.5 py-0.5 rounded shadow-sm">
+<span class="">Hadir</span><span class="">132</span>
+</div>
+<div class="grid grid-cols-3 gap-0.5 text-[9px] text-center font-bold">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant rounded py-0.5">L: 7</span>
+<span class="bg-primary-fixed text-on-primary-fixed rounded py-0.5">C: 6</span>
+<span class="bg-error-container text-on-error-container rounded py-0.5">A: 3</span>
+</div>
+</div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">25</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>135</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/30 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between">
+<div class="flex justify-end"><span class="font-label-md text-label-md text-outline">26</span></div>
+<div class="text-center"><span class="font-label-sm text-label-sm text-outline px-1.5 py-0.5 rounded bg-surface-container">Libur</span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/30 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between">
+<div class="flex justify-end"><span class="font-label-md text-label-md text-error/60">27</span></div>
+<div class="text-center"><span class="font-label-sm text-label-sm text-outline px-1.5 py-0.5 rounded bg-surface-container">Libur</span></div>
+</div>
+<!-- Oct 28 - 31 (Week 5) -->
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">28</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>140</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">29</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>141</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">30</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-secondary flex justify-between"><span class="">Late</span><strong>6</strong></span></div>
+</div>
+<div class="min-h-[102px] p-2 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-high cursor-pointer transition-colors flex flex-col justify-between group">
+<div class="flex justify-between items-center"><span class="w-2 h-2 rounded-full bg-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface font-semibold">31</span></div>
+<div class="flex flex-col gap-0.5"><span class="px-1 py-0.5 rounded text-[10px] leading-none bg-surface-container-lowest text-tertiary flex justify-between"><span class="">Hadir</span><strong>138</strong></span></div>
+</div>
+<!-- Nov 1, 2, 3 (Next month spillover) -->
+<div class="min-h-[102px] p-1.5 rounded-lg bg-surface-container-low/40 opacity-45 flex flex-col justify-between">
+<span class="text-right font-label-md text-label-md text-outline">1 Nov</span>
+<div class="text-center font-body-sm text-body-sm text-outline">-</div>
+</div>
+<div class="min-h-[102px] p-1.5 rounded-lg bg-surface-container-low/40 opacity-45 flex flex-col justify-between">
+<span class="text-right font-label-md text-label-md text-outline">2 Nov</span>
+<div class="text-center font-body-sm text-body-sm text-outline">-</div>
+</div>
+<div class="min-h-[102px] p-1.5 rounded-lg bg-surface-container-low/40 opacity-45 flex flex-col justify-between">
+<span class="text-right font-label-md text-label-md text-outline">3 Nov</span>
+<div class="text-center font-body-sm text-body-sm text-outline">-</div>
+</div>
+</div>
+<!-- Color Legend Footer -->
+<div class="pt-space-md bg-surface-container-low/50 -mx-space-lg -mb-space-lg p-space-md rounded-b-xl flex flex-wrap items-center justify-between gap-space-sm">
+
+<div class="font-body-sm text-body-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span class="">Diperbarui otomatis tiap 60 detik</span>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Employee Drill-down Panel (~40%) -->
+<div class="xl:col-span-5 flex flex-col gap-space-md">
+<!-- Container Box -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-md">
+<!-- Panel Header -->
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-space-xs text-primary font-label-sm text-label-sm uppercase font-bold tracking-wider mb-0.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="">Detail Rekapitulasi</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Kamis, 24 Oktober 2026</h3>
+<span class="font-body-sm text-body-sm text-outline">Menampilkan 148 catatan absensi terverifikasi</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors" title="Refresh Data">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors" title="Pilihan Tampilan">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Category Filter Tabs -->
+<div class="flex items-center gap-1 overflow-x-auto pb-1" id="filter-tabs">
+
+
+<button class="tab-btn px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-secondary font-label-md text-label-md font-semibold shrink-0 transition-all hover:bg-surface" data-tab="late">
+            Terlambat (7)
+          </button>
+
+<button class="tab-btn px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-tertiary-container font-label-md text-label-md font-semibold shrink-0 transition-all hover:bg-surface" data-tab="present">
+            Hadir (132)
+          </button>
+</div>
+<!-- Instant Search Box -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-outline">search</span>
+<input class="w-full h-10 pl-9 pr-9 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest shadow-sm transition-all" id="employee-search" placeholder="Cari nama karyawan, jabatan, atau NIK..." type="text">
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface hidden" id="clear-search">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Urgent Action Callouts Strip -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-error-container/40">
+
+
+</div>
+<!-- Scrollable Employee Feed (Priority Order: Alpha -> Leave -> Late -> Present) -->
+<div class="flex flex-col gap-space-sm max-h-[580px] overflow-y-auto pr-1" id="employee-list">
+<!-- ITEM 1: Budi Santoso (ALPHA) -->
+<div class="employee-card p-space-md rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all shadow-sm flex flex-col gap-space-xs" data-status="absent" style="display: flex;">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Close up professional portrait of an Indonesian male software engineer with glasses looking slightly concerned against a clean office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc8oCl3Bp9LL4ZLva1hmCey8SsghLzEjAliPpoazyVu8DssrvOUDfMsiLNChJGorGzMh48OhuI9wSAQarhouASmUrkYXBpU78_HDFYRSVBIr6bb4I_BiGlBfnFMz_YH7XZaoPwc2xz9LQKDf8JN9XIogxzLGJwvhhHK62xShrV8e4sJFzPdH67KFQkV3uAKv4ECy4uR3Px32umjmNlM3o89OcYe-6OqCyt-hUbV8h7F0qVBNDU0yrmVw">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Budi Santoso</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-high text-outline">EMP-0042</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">X.1&nbsp; • NISN</span>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-error"></span>Masuk</span>
+</div>
+<div class="p-2 rounded-lg bg-surface-container-lowest/80 text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-error font-medium">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+<span class="">Masuk Pada Pelajaran</span>
+</div>
+<span class="text-outline text-[11px]">Shift 08:30 - 17:30</span>
+</div>
+<div class="flex items-center justify-end gap-space-xs pt-1">
+
+
+</div>
+</div>
+<!-- ITEM 2: Siti Rahmawati (CUTI TAHUNAN) -->
+<div class="employee-card p-space-md rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all shadow-sm flex flex-col gap-space-xs" data-status="leave" style="display: none;">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Portrait of an Indonesian woman UI/UX designer wearing modern corporate casual hijab smiling warmly in bright co-working studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSQiZLdx3UOnz_B1j_C0gZr8UYGkbJKb9aTRoR9Y8w5JHMPKpP3LoDGzAcLCBLBSqLZhO38A6gQrjiQrcovcHpXNf2g7ca9MTDJLnTPn-j1x8wVDOFfvuceJyEyGiMCGgJFpCArfcSZDUO2-jsdYuzTyngjsDrgbL9rsb2-y3sRCypqxzVicnuPLPPc4lEiZMnqZgCwNXmgivpdotQK7qhg2zF9o2uKGA5EPYr0Fq84WwmT-2yw2z9JQ">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Siti Rahmawati</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-high text-outline">EMP-0105</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">UI/UX Designer • Product Team</span>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Cuti Tahunan
+              </span>
+</div>
+<div class="p-2 rounded-lg bg-surface-container-lowest/80 text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-primary font-medium">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span class="">Disetujui HRD (Surat cuti terlampir)</span>
+</div>
+<span class="text-outline text-[11px]">Durasi: 3 Hari (23-25 Okt)</span>
+</div>
+<div class="flex items-center justify-end gap-space-xs pt-1">
+<button class="px-space-sm py-1 rounded-md bg-surface-container hover:bg-surface-container-high text-primary font-label-sm text-label-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">attachment</span> Unduh Dokumen Cuti
+              </button>
+</div>
+</div>
+<!-- ITEM 3: Dimas Anggara (IZIN SAKIT) -->
+<div class="employee-card p-space-md rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all shadow-sm flex flex-col gap-space-xs" data-status="leave" style="display: none;">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Corporate headshot of an Asian man business development specialist in a tailored dark blue shirt against a minimalist office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_LZlIYh26o4NkgS0_L9zS-Bks4acfOf4YsXBh0JoWJA-KYhFw6-fNs8jqdmfiDF3FsO1bY4oPXWwy-GKJI2lmBRqUwbPQ4j8WzUfplOjNZkhykTwoUhObjCIOwqtaQ6A2mN16cINVRL7PCTVAAVLXQQkkkEd4i0veB20nK76JuQbAmI1bM-qptasnkTfI8SY4dV_xH11XBMr5dpXAyK8hGj8ALHEKTMqMV1pMgXrK0tocjTUlBpM4aQ">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Dimas Anggara</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-high text-outline">EMP-0089</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Business Development • Growth</span>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Izin Sakit
+              </span>
+</div>
+<div class="p-2 rounded-lg bg-surface-container-lowest/80 text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-on-surface font-medium">
+<span class="material-symbols-outlined text-[16px] text-primary">clinical_notes</span>
+<span class="">Surat dokter terlampir • RS Medika</span>
+</div>
+<span class="text-tertiary font-bold text-[11px]">Valid 1 Hari</span>
+</div>
+<div class="flex items-center justify-end gap-space-xs pt-1">
+<button class="px-space-sm py-1 rounded-md bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">visibility</span> Lihat Surat Medis
+              </button>
+</div>
+</div>
+<!-- ITEM 4: Reza Pratama (TERLAMBAT) -->
+<div class="employee-card p-space-md rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all shadow-sm flex flex-col gap-space-xs" data-status="late" style="display: none;">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Headshot of a focused Southeast Asian QA analyst sitting at a tech workstation with soft monitor lighting on face" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlm2afiAo0NZ5gcP3h3gbTg5qAKOGW63HEeN-cl-B4ZfQAagponWSN-hPSrZe-XgNYHf-C_iMeTAkqTkwGB1oxj1j1E5kkvsnCNvNkkCmvfuMG1hS1eCHUwYuvaK7-EMkxR4DMMUHkogvaz3RWR8COjH_Ui2LN0RK-HwgnSemG6FlW4DvnGDq1zxSvHcVdoZaXQ-5rLRuNdoHWDiAVhds8GhC6F1nLqMU7kpNMRCRE5LATfbHwe7BcSw">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Reza Pratama</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-high text-outline">EMP-0123</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">QA Analyst • Tech Hub</span>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Terlambat 65 Menit
+              </span>
+</div>
+<div class="p-2 rounded-lg bg-surface-container-lowest/80 text-on-surface-variant font-body-sm text-body-sm flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-semibold text-secondary">Jam Masuk: 09:35 WIB</span>
+<span class="text-outline text-[11px]">Toleransi: 08:30 WIB</span>
+</div>
+<span class="text-outline text-[11px] italic">Alasan: Kendala Lalu Lintas (Pohon tumbang tol barat)</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">pin_drop</span> GPS Presisi: 4 meter
+              </span>
+<button class="px-space-sm py-1 rounded-md bg-surface-container hover:bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold transition-colors">
+                Sesuaikan Jam Kerja
+              </button>
+</div>
+</div>
+<!-- ITEM 5: Maya Indah (TERLAMBAT) -->
+<div class="employee-card p-space-md rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all shadow-sm flex flex-col gap-space-xs" data-status="late" style="display: none;">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Portrait of an elegant young Asian professional woman in corporate attire with neat blazer in office boardroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB25eOWcP7_OPCyOoPaXcExXY4yCjwjJ_le7EbWCSi414L6_FrDCo6bSzh5hAvG7bBWo6T8pxPCT-Hw-FIGr0qOayshs5rMywtGwxAWv19XdUrL0hXH9690HBaJ1WQweTrSBN4HLt-g8WsakCDYinoPW-SKazb0xAQd7_IJIsryMCnvHkos95YfG-zeVZm0ERDcwvpu52AZz-FMak5NZ2ZhOIMjhzCls20xVlEOvYq-u4MT_3DaVfm56Q">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Maya Indah</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-high text-outline">EMP-0078</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Account Executive • Commercial</span>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Terlambat 42 Menit
+              </span>
+</div>
+<div class="p-2 rounded-lg bg-surface-container-lowest/80 text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
+<span class="font-semibold text-secondary">Jam Masuk: 09:12 WIB</span>
+<span class="text-outline text-[11px]">Clock-in QR Kantor</span>
+</div>
+</div>
+<!-- ITEM 6: Nadia Putri (HADIR HQ) -->
+<div class="employee-card p-space-md rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all shadow-sm flex flex-col gap-space-xs" data-status="present" style="display: none;">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Professional corporate headshot of a confident Indonesian female finance specialist in smart beige attire against an executive office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdI4FIy-7JzD7Ev6W8n-E45BFZ_iLPL6NeU8O33NURhvagemik6qGK2Mfs0n8SCwdpOpNo8qpLG3r1mKhiCjCaUhTFWuc-7BElqUR0-D-syYO_btsh_dvVz-BDOydBGARrZnnIf-2pzTKFX1pWeh53JtolBdi-WcqOINO-KZmK03HmgjTwgril9vFYIrghPavWbrwQZABAH_0tW0wiXL1MwY9ql8uPgv42Lh0FiwXPJbNHVoIh2OZARg">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Nadia Putri</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-high text-outline">EMP-0019</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Finance Specialist • Accounting</span>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Hadir Tepat Waktu
+              </span>
+</div>
+<div class="p-2 rounded-lg bg-surface-container-lowest/80 text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
+<div class="flex items-center gap-1 text-tertiary font-bold">
+<span class="material-symbols-outlined text-[16px]">fingerprint</span>
+<span class="">Masuk: 08:15 WIB</span>
+</div>
+<span class="text-outline text-[11px]">Kantor Pusat HQ Lt. 4</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-body-sm text-body-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">check_circle</span> Selfie Verifikasi Valid
+              </span>
+<button class="text-primary hover:underline font-label-sm text-label-sm font-semibold">
+                Lihat Foto Biometrik
+              </button>
+</div>
+</div>
+<!-- ITEM 7: Fajar Nugraha (HADIR WFH) -->
+<div class="employee-card p-space-md rounded-xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all shadow-sm flex flex-col gap-space-xs" data-status="present" style="display: none;">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Portrait of an energetic Indonesian DevOps engineer working from a minimalist home studio desk with ergonomic monitors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj23GnwelJaW5nzxhT38eoP-uUjFlQRonh0XmB9QpZrbkdaJ6ALuHqDssnwmLNxclMK4Zc_w3pmfnrs3wFd5zWre2l7MKHq6U2c6UXpm1kUDM3uHNPWiQkdK80NAsDUNjNLAgAK9EJPhidvakD5WVxwRQigZ77A5NrhdXfc1yOtIVpUz-iDdUY407Y8A6i_fibbK-e81Bhcv7f_9ItYpLuREADJuYFqPVsUWHxfI6LQAi4rHP9iv8WDw">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Fajar Nugraha</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-high text-outline">EMP-0056</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">DevOps Engineer • Infrastructure</span>
+</div>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> WFH Valid
+              </span>
+</div>
+<div class="p-2 rounded-lg bg-surface-container-lowest/80 text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
+<div class="flex items-center gap-1 text-on-surface font-semibold">
+<span class="material-symbols-outlined text-[16px] text-secondary">wifi_tethering</span>
+<span class="">Masuk: 08:28 WIB</span>
+</div>
+<span class="text-outline text-[11px]">IP VPN Terverifikasi</span>
+</div>
+</div>
+</div>
+<!-- Panel Footer Controls -->
+<div class="pt-space-sm border-t border-transparent flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+
+
+</div>
+</div>
+</div>
+</div>
+<!-- Client-side Interactive Logic -->
+<script>
+    (function initAttendanceCalendar() {
+      // 1. Tab Switching Functionality
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const employeeCards = document.querySelectorAll('.employee-card');
+      const searchInput = document.getElementById('employee-search');
+      const clearSearchBtn = document.getElementById('clear-search');
+
+      let currentTab = 'all';
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabButtons.forEach(b => {
+            b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+            b.classList.add('bg-surface-container-low', 'hover:bg-surface');
+            if (b.dataset.tab === 'absent') b.classList.add('text-error');
+            else if (b.dataset.tab === 'late') b.classList.add('text-secondary');
+            else if (b.dataset.tab === 'leave') b.classList.add('text-primary');
+            else if (b.dataset.tab === 'present') b.classList.add('text-tertiary-container');
+            else b.classList.add('text-on-surface');
+          });
+
+          btn.classList.remove('bg-surface-container-low', 'hover:bg-surface', 'text-error', 'text-secondary', 'text-tertiary-container');
+          btn.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+
+          currentTab = btn.dataset.tab;
+          filterEmployees();
+        });
+      });
+
+      // 2. Real-time Search Filter
+      searchInput.addEventListener('input', () => {
+        if (searchInput.value.length > 0) {
+          clearSearchBtn.classList.remove('hidden');
+        } else {
+          clearSearchBtn.classList.add('hidden');
+        }
+        filterEmployees();
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        filterEmployees();
+      });
+
+      function filterEmployees() {
+        const query = searchInput.value.toLowerCase().trim();
+
+        employeeCards.forEach(card => {
+          const status = card.dataset.status;
+          const text = card.textContent.toLowerCase();
+
+          const matchesTab = (currentTab === 'all') || (status === currentTab);
+          const matchesQuery = query === '' || text.includes(query);
+
+          if (matchesTab && matchesQuery) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
+
+      // 3. Quick Action Button Feedback
+      const btnExport = document.getElementById('btn-export-daily');
+      const btnPrint = document.getElementById('btn-print-summary');
+      const btnToday = document.getElementById('btn-today');
+
+      if (btnExport) {
+        btnExport.addEventListener('click', () => {
+          const original = btnExport.innerHTML;
+          btnExport.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Mengunduh...</span>`;
+          setTimeout(() => {
+            btnExport.innerHTML = `<span class="material-symbols-outlined text-[18px] text-tertiary">check</span><span>Tersimpan!</span>`;
+            setTimeout(() => { btnExport.innerHTML = original; }, 2000);
+          }, 1000);
+        });
+      }
+
+      if (btnPrint) {
+        btnPrint.addEventListener('click', () => {
+          window.print();
+        });
+      }
+
+      if (btnToday) {
+        btnToday.addEventListener('click', () => {
+          btnToday.classList.add('ring-2', 'ring-primary');
+          setTimeout(() => btnToday.classList.remove('ring-2', 'ring-primary'), 1000);
+        });
+      }
+    })();
+  </script>
+</div></main></div>
+
+</body></html>
