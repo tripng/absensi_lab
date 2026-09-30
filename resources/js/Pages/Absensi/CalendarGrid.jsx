@@ -105,7 +105,7 @@ export default function CalendarGrid() {
         <div className="flex items-center gap-space-sm">
           <div className="w-2.5 h-7 bg-primary rounded-full" />
           <div>
-            <h2 className="font-headline-sm text-headline-sm text-on-surface font-bold">
+            <h2 className="font-headline-sm text-headline-sm text-on-surface font-extrabold">
               Grid Kehadiran Bulanan
             </h2>
             <p className="font-body-sm text-body-sm text-outline">
@@ -128,7 +128,7 @@ export default function CalendarGrid() {
           </button>
           <div className="px-space-md flex items-center gap-space-xs">
             <Mso name="calendar_today" className="text-primary" />
-            <span className="font-headline-sm text-headline-sm text-on-surface font-bold">
+            <span className="font-headline-sm text-headline-sm text-on-surface font-extrabold">
               {monthMeta.displayed}
             </span>
           </div>

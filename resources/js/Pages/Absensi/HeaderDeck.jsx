@@ -6,7 +6,7 @@ export default function HeaderDeck() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
         <div className="flex flex-col gap-space-xs">
           <div className="flex items-center gap-space-sm">
-            <span className="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+            <span className="font-headline-lg text-headline-lg text-on-surface tracking-tight font-extrabold">
               Kalender Absensi Lab Komputer
             </span>
             <span className="px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider font-semibold">

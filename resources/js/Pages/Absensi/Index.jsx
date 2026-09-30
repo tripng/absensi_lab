@@ -2,23 +2,37 @@ import HeaderDeck from './HeaderDeck';
 import MetricCards from './MetricCards';
 import CalendarGrid from './CalendarGrid';
 import DetailPanel from './DetailPanel';
+import Navbar from './Navbar';
+import Topbar from './Topbar';
 
 export default function AbsensiIndex() {
   return (
-    <main className="overflow-y-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Top Intro & Control Deck */}
-        <HeaderDeck />
+    <div className="flex h-screen overflow-hidden bg-background text-on-surface">
+      {/* Sidebar navigation */}
+      <Navbar />
 
-        {/* Realtime Metric Badges */}
-        <MetricCards />
+      {/* Main content area (offset by sidebar width) */}
+      <div className="flex-1 flex flex-col overflow-hidden ml-64">
+        {/* Topbar */}
+        <Topbar />
 
-        {/* Main Canvas: 60% Calendar + 40% Detail Panel */}
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start pb-space-xl">
-          <CalendarGrid />
-          <DetailPanel />
-        </div>
+        {/* Scrollable page body */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-space-lg">
+            {/* Top Intro & Control Deck */}
+            <HeaderDeck />
+
+            {/* Realtime Metric Badges */}
+            <MetricCards />
+
+            {/* Main Canvas: 60% Calendar + 40% Detail Panel */}
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start pb-space-xl">
+              <CalendarGrid />
+              <DetailPanel />
+            </div>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
   );
 }

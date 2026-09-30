@@ -15,7 +15,7 @@ function MetricCard({ m }) {
           </div>
         </div>
         <div className="flex items-baseline gap-space-xs">
-          <span className={`font-headline-lg text-headline-lg font-bold ${m.valueColor}`}>{m.value}</span>
+          <span className={`font-headline-lg text-headline-lg font-extrabold ${m.valueColor}`}>{m.value}</span>
           <span className="font-label-md text-label-md px-2 py-0.5 rounded-full bg-surface-container-lowest text-outline font-bold">
             {m.sub}
           </span>
@@ -54,7 +54,7 @@ function MetricCard({ m }) {
 
 export default function MetricCards() {
   return (
-    <div className="mb-space-lg grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-space-md">
+    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-space-md">
       {metrics.map((m) => (
         <MetricCard key={m.key} m={m} />
       ))}
