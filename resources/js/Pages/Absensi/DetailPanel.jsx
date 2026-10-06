@@ -31,7 +31,7 @@ export default function DetailPanel() {
   });
 
   return (
-    <div className="xl:col-span-5 flex flex-col gap-space-md">
+    <div className="xl:col-span-4 flex flex-col gap-space-md">
       {/* Container Box */}
       <div className="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-md">
         {/* Panel Header */}

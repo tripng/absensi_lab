@@ -99,7 +99,7 @@ function CalendarCell({ day }) {
 
 export default function CalendarGrid() {
   return (
-    <div className="xl:col-span-7 bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+    <div className="xl:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
       {/* Calendar Header Label & Month Meta */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-space-sm">
@@ -152,7 +152,7 @@ export default function CalendarGrid() {
         <div className="h-6 w-px bg-surface-container hidden sm:block" />
 
         {/* View mode toggle */}
-        <div className="flex items-center gap-space-xs self-end xl:self-auto bg-surface-container-low p-1 rounded-lg">
+      {/*<div className="flex items-center gap-space-xs self-end xl:self-auto bg-surface-container-low p-1 rounded-lg">
           <button
             type="button"
             className="px-space-md py-1.5 rounded-lg bg-surface-container-lowest shadow-sm text-primary font-label-md text-label-md font-semibold flex items-center gap-1.5"
@@ -175,6 +175,8 @@ export default function CalendarGrid() {
             <span>Hari</span>
           </button>
         </div>
+              */}
+
       </div>
 
       {/* Day abbreviation header */}
