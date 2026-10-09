@@ -11,9 +11,9 @@ class DataController extends Controller
 {
     /**
      * Tampilkan seluruh data absensi dari tabel log_akses.
-     * Join ke rfid_card, pengguna, v_scan_lookup, dan lokasi
+     * Join ke rfid_card, pengguna, v_scan_lookup
      * agar kolom nama, nisn/nip, tipe, dan nama_kelas lengkap.
-     * Dukung filter rentang tanggal (start_date sampai end_date).
+     * Dukung filter rentang tanggal (start_date sampai end_date) dan kelas.
      */
     public function index(Request $request)
     {
@@ -21,6 +21,7 @@ class DataController extends Controller
 
         $startDate = $request->query('start_date');
         $endDate   = $request->query('end_date');
+        $kelas     = $request->query('kelas');
 
         // Validasi format tanggal sederhana (YYYY-MM-DD).
         $startTs = null;
@@ -65,6 +66,21 @@ class DataController extends Controller
             $query->whereRaw('CAST(la.waktu_scan AS UNSIGNED) <= ?', [$endTs]);
         }
 
+        // Filter kelas (hanya berlaku untuk siswa yang punya nama_kelas).
+        if ($kelas) {
+            $query->where('v.nama_kelas', $kelas);
+        }
+
+        // Daftar kelas unik untuk dropdown (hanya siswa yang punya nama_kelas).
+        $kelasList = $db->table('v_scan_lookup')
+            ->whereNotNull('nama_kelas')
+            ->where('nama_kelas', '!=', '')
+            ->distinct()
+            ->pluck('nama_kelas')
+            ->sort()
+            ->values()
+            ->all();
+
         $perPage = 25;
         $page    = max(1, (int) $request->query('page', 1));
         $offset  = ($page - 1) * $perPage;
@@ -104,7 +120,9 @@ class DataController extends Controller
             'filters' => [
                 'start_date' => $startDate ?? '',
                 'end_date'   => $endDate ?? '',
+                'kelas'      => $kelas ?? '',
             ],
+            'kelasList' => $kelasList,
         ];
 
         return Inertia::render('Data/Index', [

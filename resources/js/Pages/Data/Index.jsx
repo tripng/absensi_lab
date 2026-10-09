@@ -4,14 +4,15 @@ import Navbar from '../Absensi/Navbar';
 import Topbar from '../Absensi/Topbar';
 
 export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} } }) {
-  const { data, meta, filters } = absensi;
+  const { data, meta, filters, kelasList = [] } = absensi;
   const { url } = usePage();
   const params = new URLSearchParams(url.split('?')[1] || '');
   const currentPage = parseInt(params.get('page') || '1', 10);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch]     = useState('');
   const [startDate, setStartDate] = useState(filters.start_date || '');
-  const [endDate, setEndDate] = useState(filters.end_date || '');
+  const [endDate, setEndDate]   = useState(filters.end_date || '');
+  const [kelas, setKelas]       = useState(filters.kelas || '');
 
   // Quick client-side search (nama / NISN / NIP).
   const searched = search
@@ -21,22 +22,26 @@ export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} 
       )
     : data;
 
-  // Helper: build query string untuk date filter + pagination.
+  // Helper: build query string untuk filter + pagination.
   const buildPageQuery = (page) => {
     const q = new URLSearchParams();
     if (startDate) q.set('start_date', startDate);
     if (endDate) q.set('end_date', endDate);
+    if (kelas) q.set('kelas', kelas);
     if (page > 1) q.set('page', page);
     return q.toString();
   };
 
-  const applyDateFilter = (e) => {
+  const applyFilter = (e) => {
     e.preventDefault();
     const target = `/data?${buildPageQuery(1)}`;
     router.visit(target, { method: 'get', preserveScroll: true });
   };
 
-  const clearDateFilter = () => {
+  const clearFilter = () => {
+    setStartDate('');
+    setEndDate('');
+    setKelas('');
     router.visit('/data', { method: 'get', preserveScroll: true });
   };
 
@@ -60,12 +65,10 @@ export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} 
     <div className="flex h-screen overflow-hidden bg-background text-on-surface">
       {/* Sidebar navigation */}
       <Navbar />
-
       {/* Main content area (offset by sidebar width) */}
       <div className="flex-1 flex flex-col overflow-hidden ml-64">
         {/* Topbar */}
         <Topbar />
-
         {/* Scrollable page body */}
         <main className="flex-1 overflow-y-auto">
           <div className="w-full px-space-md sm:px-space-lg lg:px-space-lg py-space-lg">
@@ -81,8 +84,8 @@ export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} 
 
             {/* Filter bar */}
             <div className="mb-space-md flex flex-col sm:flex-row sm:items-end gap-space-md">
-              {/* Date range filter */}
-              <form onSubmit={applyDateFilter} className="flex flex-wrap items-end gap-space-sm">
+              {/* Filter: tanggal range + kelas */}
+              <form onSubmit={applyFilter} className="flex flex-wrap items-end gap-space-sm">
                 <div className="flex flex-col">
                   <label className="font-label-sm text-on-surface-variant mb-space-xs">Dari</label>
                   <input
@@ -101,16 +104,29 @@ export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} 
                     className="px-space-sm py-space-xs border border-outline-variant rounded-xl bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
+                <div className="flex flex-col">
+                  <label className="font-label-sm text-on-surface-variant mb-space-xs">Kelas</label>
+                  <select
+                    value={kelas}
+                    onChange={(e) => setKelas(e.target.value)}
+                    className="px-space-sm py-space-xs border border-outline-variant rounded-xl bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="">Semua Kelas</option>
+                    {kelasList.map((k) => (
+                      <option key={k} value={k}>{k}</option>
+                    ))}
+                  </select>
+                </div>
                 <button
                   type="submit"
                   className="px-space-md py-space-sm bg-primary text-on-primary rounded-xl font-label-md font-medium hover:bg-primary/90 transition-colors"
                 >
                   Terapkan
                 </button>
-                {(startDate || endDate) && (
+                {(startDate || endDate || kelas) && (
                   <button
                     type="button"
-                    onClick={clearDateFilter}
+                    onClick={clearFilter}
                     className="px-space-md py-space-sm bg-surface-container-high text-on-surface-variant rounded-xl font-label-md font-medium hover:bg-surface-container transition-colors"
                   >
                     Reset
@@ -136,8 +152,13 @@ export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} 
                 Total: {meta.total ?? 0} catatan{visibleRows !== (meta.total ?? 0) ? ` (menampilkan ${visibleRows})` : ''}
               </span>
               {(startDate || endDate) && (
-                <span className="px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container">
+                <span className="px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary">
                   Periode: {startDate || '—'} s/d {endDate || '—'}
+                </span>
+              )}
+              {kelas && (
+                <span className="px-space-sm py-space-xs rounded-full bg-secondary-container text-on-secondary-container">
+                  Kelas: {kelas}
                 </span>
               )}
             </div>
@@ -160,7 +181,7 @@ export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} 
                 <tbody className="divide-y divide-outline-variant bg-surface-container-lowest">
                   {searched.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className="px-space-md py-space-lg text-center text-on-surface-variant">
+                      <td colSpan={8} className="px-space-md py-space-lg text-center text-on-surface-variant">
                         Tidak ada data.
                       </td>
                     </tr>
