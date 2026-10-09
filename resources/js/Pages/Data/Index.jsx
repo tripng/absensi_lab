@@ -1,23 +1,50 @@
 import { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import Navbar from '../Absensi/Navbar';
 import Topbar from '../Absensi/Topbar';
 
-export default function DataIndex({ absensi = { data: [], meta: {} } }) {
-  const { data, meta } = absensi;
+export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} } }) {
+  const { data, meta, filters } = absensi;
   const { url } = usePage();
   const params = new URLSearchParams(url.split('?')[1] || '');
   const currentPage = parseInt(params.get('page') || '1', 10);
-  const [filter, setFilter] = useState('');
 
-  const filtered = filter
-    ? data.filter(
-        (row) =>
-          row.nama.toLowerCase().includes(filter.toLowerCase()) ||
-          row.id_pengguna?.toLowerCase().includes(filter.toLowerCase()) ||
-          row.lokasi.toLowerCase().includes(filter.toLowerCase())
+  const [search, setSearch] = useState('');
+  const [startDate, setStartDate] = useState(filters.start_date || '');
+  const [endDate, setEndDate] = useState(filters.end_date || '');
+
+  // Quick client-side search (nama / NISN / NIP).
+  const searched = search
+    ? data.filter((row) =>
+        (row.nama || '').toLowerCase().includes(search.toLowerCase()) ||
+        (row.id_pengguna || '').toLowerCase().includes(search.toLowerCase())
       )
     : data;
+
+  // Helper: build query string untuk date filter + pagination.
+  const buildPageQuery = (page) => {
+    const q = new URLSearchParams();
+    if (startDate) q.set('start_date', startDate);
+    if (endDate) q.set('end_date', endDate);
+    if (page > 1) q.set('page', page);
+    return q.toString();
+  };
+
+  const applyDateFilter = (e) => {
+    e.preventDefault();
+    const target = `/data?${buildPageQuery(1)}`;
+    router.visit(target, { method: 'get', preserveScroll: true });
+  };
+
+  const clearDateFilter = () => {
+    router.visit('/data', { method: 'get', preserveScroll: true });
+  };
+
+  const statusClasses = {
+    sukses: 'bg-green-100 text-green-800',
+    gagal: 'bg-red-100 text-red-800',
+    pending: 'bg-yellow-100 text-yellow-800',
+  };
 
   const renderCell = (row, key) => {
     const val = row[key];
@@ -27,11 +54,7 @@ export default function DataIndex({ absensi = { data: [], meta: {} } }) {
     return <span className="text-on-surface">{val}</span>;
   };
 
-  const statusClasses = {
-    sukses: 'bg-green-100 text-green-800',
-    gagal: 'bg-red-100 text-red-800',
-    pending: 'bg-yellow-100 text-yellow-800',
-  };
+  const visibleRows = searched.length;
 
   return (
     <div className="flex h-screen overflow-hidden bg-background text-on-surface">
@@ -56,20 +79,67 @@ export default function DataIndex({ absensi = { data: [], meta: {} } }) {
               </p>
             </div>
 
-            {/* Filter */}
-            <div className="mb-space-md">
-              <input
-                type="text"
-                placeholder="Cari nama, NISN/NIP, lokasi..."
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="w-full max-w-sm px-space-md py-space-sm border border-outline-variant rounded-xl bg-surface-container-high text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
-              />
+            {/* Filter bar */}
+            <div className="mb-space-md flex flex-col sm:flex-row sm:items-end gap-space-md">
+              {/* Date range filter */}
+              <form onSubmit={applyDateFilter} className="flex flex-wrap items-end gap-space-sm">
+                <div className="flex flex-col">
+                  <label className="font-label-sm text-on-surface-variant mb-space-xs">Dari</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="px-space-sm py-space-xs border border-outline-variant rounded-xl bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="font-label-sm text-on-surface-variant mb-space-xs">Sampai</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="px-space-sm py-space-xs border border-outline-variant rounded-xl bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="px-space-md py-space-sm bg-primary text-on-primary rounded-xl font-label-md font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Terapkan
+                </button>
+                {(startDate || endDate) && (
+                  <button
+                    type="button"
+                    onClick={clearDateFilter}
+                    className="px-space-md py-space-sm bg-surface-container-high text-on-surface-variant rounded-xl font-label-md font-medium hover:bg-surface-container transition-colors"
+                  >
+                    Reset
+                  </button>
+                )}
+              </form>
+
+              {/* Search field */}
+              <div className="ml-auto">
+                <input
+                  type="text"
+                  placeholder="Cari nama / NISN / NIP..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full max-w-sm px-space-md py-space-sm border border-outline-variant rounded-xl bg-surface-container-high text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
             </div>
 
-            {/* Total info */}
-            <div className="mb-space-md text-body-sm text-on-surface-variant">
-              {meta.total !== undefined ? `Total: ${meta.total} catatan` : ''}
+            {/* Active filter info + total */}
+            <div className="mb-space-md flex flex-wrap gap-space-sm items-center text-body-sm text-on-surface-variant">
+              <span>
+                Total: {meta.total ?? 0} catatan{visibleRows !== (meta.total ?? 0) ? ` (menampilkan ${visibleRows})` : ''}
+              </span>
+              {(startDate || endDate) && (
+                <span className="px-space-sm py-space-xs rounded-full bg-primary-container text-on-primary-container">
+                  Periode: {startDate || '—'} s/d {endDate || '—'}
+                </span>
+              )}
             </div>
 
             {/* Table */}
@@ -85,39 +155,38 @@ export default function DataIndex({ absensi = { data: [], meta: {} } }) {
                     <th className="px-space-md py-space-sm text-left font-label-md font-medium text-on-surface">Kelas</th>
                     <th className="px-space-md py-space-sm text-left font-label-md font-medium text-on-surface">Jenis</th>
                     <th className="px-space-md py-space-sm text-left font-label-md font-medium text-on-surface">Status</th>
-                    <th className="px-space-md py-space-sm text-left font-label-md font-medium text-on-surface">Lokasi</th>
-                    <th className="px-space-md py-space-sm text-left font-label-md font-medium text-on-surface">Keterangan</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant bg-surface-container-lowest">
-                  {filtered.length === 0 ? (
+                  {searched.length === 0 ? (
                     <tr>
-                      <td colSpan={10} className="px-space-md py-space-lg text-center text-on-surface-variant">
+                      <td colSpan={9} className="px-space-md py-space-lg text-center text-on-surface-variant">
                         Tidak ada data.
                       </td>
                     </tr>
                   ) : (
-                    filtered.map((row, i) => {
-                      const realNo = meta.current_page && meta.per_page
-                        ? (meta.current_page - 1) * meta.per_page + i + 1
-                        : i + 1;
+                    searched.map((row, i) => {
+                      const realNo =
+                        meta.current_page && meta.per_page
+                          ? (meta.current_page - 1) * meta.per_page + i + 1
+                          : i + 1;
                       const statusCls = statusClasses[row.status] || 'bg-surface-container text-on-surface-variant';
                       return (
                         <tr key={row.id}>
                           <td className="px-space-md py-space-sm font-label-sm text-on-surface-variant">{realNo}</td>
-                          <td className="px-space-md py-space-sm font-label-sm">{renderCell(row, 'waktu_scan')}</td>
+                          <td className="px-space-md py-space-sm font-label-sm">{row.waktu_scan}</td>
                           <td className="px-space-md py-space-sm font-label-sm font-medium">{row.nama}</td>
                           <td className="px-space-md py-space-sm font-label-sm">{renderCell(row, 'tipe')}</td>
                           <td className="px-space-md py-space-sm font-label-sm">{renderCell(row, 'id_pengguna')}</td>
                           <td className="px-space-md py-space-sm font-label-sm">{renderCell(row, 'kelas')}</td>
                           <td className="px-space-md py-space-sm font-label-sm">{renderCell(row, 'jenis')}</td>
                           <td className="px-space-md py-space-sm">
-                            <span className={`inline-block px-space-sm rounded-full font-label-sm font-medium ${statusCls}`}>
+                            <span
+                              className={`inline-block px-space-sm rounded-full font-label-sm font-medium ${statusCls}`}
+                            >
                               {row.status || '-'}
                             </span>
                           </td>
-                          <td className="px-space-md py-space-sm font-label-sm">{renderCell(row, 'lokasi')}</td>
-                          <td className="px-space-md py-space-sm font-label-sm">{renderCell(row, 'keterangan')}</td>
                         </tr>
                       );
                     })
@@ -134,7 +203,7 @@ export default function DataIndex({ absensi = { data: [], meta: {} } }) {
                   return (
                     <Link
                       key={pageNum}
-                      href={`/data?page=${pageNum}`}
+                      href={`/data?${buildPageQuery(pageNum)}`}
                       className={
                         isCurrent
                           ? 'px-space-sm py-space-xs rounded bg-primary text-on-primary font-label-sm font-bold'

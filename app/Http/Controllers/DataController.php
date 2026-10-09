@@ -12,11 +12,31 @@ class DataController extends Controller
     /**
      * Tampilkan seluruh data absensi dari tabel log_akses.
      * Join ke rfid_card, pengguna, v_scan_lookup, dan lokasi
-     * agar kolom nama, nisn/nip, tipe, dan nama_lokasi lengkap.
+     * agar kolom nama, nisn/nip, tipe, dan nama_kelas lengkap.
+     * Dukung filter rentang tanggal (start_date sampai end_date).
      */
     public function index(Request $request)
     {
         $db = DB::connection('mysql');
+
+        $startDate = $request->query('start_date');
+        $endDate   = $request->query('end_date');
+
+        // Validasi format tanggal sederhana (YYYY-MM-DD).
+        $startTs = null;
+        $endTs   = null;
+        if ($startDate) {
+            $d = \DateTime::createFromFormat('Y-m-d', $startDate);
+            if ($d && $d->format('Y-m-d') === $startDate) {
+                $startTs = $d->setTime(0, 0, 0)->getTimestamp();
+            }
+        }
+        if ($endDate) {
+            $d = \DateTime::createFromFormat('Y-m-d', $endDate);
+            if ($d && $d->format('Y-m-d') === $endDate) {
+                $endTs = $d->setTime(23, 59, 59)->getTimestamp();
+            }
+        }
 
         $query = $db->table('log_akses as la')
             ->selectRaw('
@@ -24,26 +44,30 @@ class DataController extends Controller
                 la.jenis,
                 la.waktu_scan,
                 la.status,
-                la.keterangan,
                 p.tipe,
                 p.nama as nama,
                 v.nisn,
                 v.nip,
                 v.nama_kelas,
-                v.tingkat,
-                l.nama_lokasi
+                v.tingkat
             ')
             ->join('rfid_card as r', 'r.id', '=', 'la.rfid_id')
             ->join('pengguna as p', 'p.id', '=', 'r.pengguna_id')
             ->leftJoin('v_scan_lookup as v', 'v.uid', '=', 'r.uid')
-            ->join('lokasi as l', 'l.id', '=', 'la.lokasi_id')
             ->where('la.waktu_scan', 'REGEXP', '^[0-9]+$')
             ->orderByRaw('CAST(la.waktu_scan AS UNSIGNED) DESC');
 
-        // Pagination manual (Inertia-friendly)
+        // Filter rentang tanggal berdasarkan waktu_scan (unix epoch).
+        if ($startTs) {
+            $query->whereRaw('CAST(la.waktu_scan AS UNSIGNED) >= ?', [$startTs]);
+        }
+        if ($endTs) {
+            $query->whereRaw('CAST(la.waktu_scan AS UNSIGNED) <= ?', [$endTs]);
+        }
+
         $perPage = 25;
-        $page = max(1, (int) $request->query('page', 1));
-        $offset = ($page - 1) * $perPage;
+        $page    = max(1, (int) $request->query('page', 1));
+        $offset  = ($page - 1) * $perPage;
 
         $total = $query->count();
 
@@ -51,7 +75,7 @@ class DataController extends Controller
             $ts = $row->waktu_scan ? (int) $row->waktu_scan : null;
             $moment = $ts ? Carbon::createFromTimestamp($ts, 'Asia/Jakarta') : null;
 
-            $idLabel = $row->tipe === 'siswa' ? $row->nisn : $row->nip;
+            $idLabel = $row->tipe === 'siswa' ? ($row->nisn ?? '') : ($row->nip ?? '');
 
             return [
                 'id'          => (int) $row->id,
@@ -61,11 +85,9 @@ class DataController extends Controller
                 'nama'        => $row->nama ?? '-',
                 'tipe'        => $row->tipe ?? '-',
                 'id_pengguna' => $idLabel ?: '-',
-                'kelas'       => $row->nama_kelas ?? ($row->tingkat ?? '-'),
+                'kelas'       => ($row->nama_kelas ?? ($row->tingkat ?? '-')),
                 'jenis'       => $row->jenis ?? '-',
                 'status'      => $row->status ?? '-',
-                'lokasi'      => $row->nama_lokasi ?? '-',
-                'keterangan'  => $row->keterangan ?? '-',
             ];
         })->values();
 
@@ -76,6 +98,12 @@ class DataController extends Controller
                 'per_page'     => $perPage,
                 'total'        => (int) $total,
                 'last_page'    => (int) ceil($total / $perPage),
+                'from'         => $total > 0 ? min($total, ($page - 1) * $perPage + 1) : 0,
+                'to'           => min($total, $page * $perPage),
+            ],
+            'filters' => [
+                'start_date' => $startDate ?? '',
+                'end_date'   => $endDate ?? '',
             ],
         ];
 
