@@ -1,14 +1,15 @@
 import Mso from './Mso';
+import { Link, usePage } from '@inertiajs/react';
 
 const navItems = [
-  { label: 'Dashboard', icon: 'dashboard', active: true },
-  { label: 'Absensi', icon: 'calendar_today', active: true },
-  { label: 'Laporan', icon: 'list_alt', active: false },
-  { label: 'Staf', icon: 'group', active: false },
-  { label: 'Pengaturan', icon: 'settings', active: false },
+  { label: 'Absensi', icon: 'calendar_today', href: '/absensi' },
+  { label: 'Data', icon: 'dataset', href: '/data' },
 ];
 
 export default function Navbar() {
+  const { url } = usePage();
+  const currentPath = url.split('?')[0];
+
   return (
     <nav className="fixed top-0 left-0 h-screen w-64 bg-surface-container-lowest shadow-lg flex flex-col z-50">
       {/* Brand */}
@@ -23,19 +24,23 @@ export default function Navbar() {
 
       {/* Nav items */}
       <div className="flex-1 py-space-md overflow-y-auto">
-        {navItems.map((item) => (
-          <div
-            key={item.label}
-            className={`mx-space-md mb-space-sm flex items-center gap-space-sm px-space-md py-space-sm rounded-xl transition-all cursor-pointer ${
-              item.active
-                ? 'bg-primary-fixed shadow text-primary font-label-md font-extrabold'
-                : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md font-medium'
-            }`}
-          >
-            <Mso name={item.icon} className={item.active ? 'text-primary' : 'text-on-surface-variant'} />
-            <span>{item.label}</span>
-          </div>
-        ))}
+        {navItems.map((item) => {
+          const isActive = currentPath === item.href;
+          return (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={`mx-space-md mb-space-sm flex items-center gap-space-sm px-space-md py-space-sm rounded-xl transition-all ${
+                isActive
+                  ? 'bg-primary-fixed shadow text-primary font-label-md font-extrabold'
+                  : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md font-medium'
+              }`}
+            >
+              <Mso name={item.icon} className={isActive ? 'text-primary' : 'text-on-surface-variant'} />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
       </div>
 
       {/* Footer / User */}

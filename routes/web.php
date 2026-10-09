@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -14,9 +15,8 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/absensi', function () {
-    return Inertia::render('Absensi/Index');
-})->name('absensi');
+Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
+Route::get('/data', [\App\Http\Controllers\DataController::class, 'index'])->name('data');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
