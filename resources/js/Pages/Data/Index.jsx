@@ -134,8 +134,8 @@ export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} 
                 )}
               </form>
 
-              {/* Search field */}
-              <div className="ml-auto">
+              {/* Search field + Export button */}
+              <div className="ml-auto flex items-end gap-space-sm">
                 <input
                   type="text"
                   placeholder="Cari nama / NISN / NIP..."
@@ -143,6 +143,23 @@ export default function DataIndex({ absensi = { data: [], meta: {}, filters: {} 
                   onChange={(e) => setSearch(e.target.value)}
                   className="w-full max-w-sm px-space-md py-space-sm border border-outline-variant rounded-xl bg-surface-container-high text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
                 />
+                {/* Export Excel — hanya aktif ketika kelas dipilih */}
+                {!kelas ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="px-space-md py-space-sm bg-surface-container text-on-surface-variant rounded-xl font-label-md font-medium opacity-50 cursor-not-allowed"
+                  >
+                    Export Excel
+                  </button>
+                ) : (
+                  <a
+                    href={`/data/export?kelas=${encodeURIComponent(kelas)}${startDate ? `&start_date=${startDate}` : ''}${endDate ? `&end_date=${endDate}` : ''}`}
+                    className="px-space-md py-space-sm bg-secondary text-on-secondary-container rounded-xl font-label-md font-medium hover:bg-secondary/90 transition-colors"
+                  >
+                    Export Excel
+                  </a>
+                )}
               </div>
             </div>
 

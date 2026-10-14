@@ -1,0 +1,13 @@
+pelajari database project ini. aku ingin kau membuat sebuah api dari table log_akses untuk kukirimkan data baru dari aplikasi lain yaitu aplikasi scan setiap 1 menit. hal yang harus kau pastikan adalah
+1. pastikan tidak ada duplikasi data jika id yang dikirim sudah ada di database tidak perlu dimasukkan
+2. karena aku mungkin akan mengirimkan batch jadi pastikan api support
+
+
+berhasil dengan baik tetapi ada yang perlu diperbaiki.
+1. pertama pertemuan harus selalu 1 sampai 31 jadi dari kolom E5 sampai AI
+2. seluruh nama kelas di letakkan dan jika datanya tidak ada di log_akses maka data pertemuan kosongkan saja
+
+
+kamu adalah seorang database developer, database sekarang adalah untuk aplikasi absensi di labkom tetapi masih belum mempunyai mata pelajaran
+aku ingin kau menambahkan struktur mata pelajaran untuk manajemen pelajaran dengan 2 kategori jadwal berulang dan jadwal pinjaman.
+buatkan struktur databasenya dan hubungkan dengan

@@ -1,5 +1,5 @@
 import Mso from './Mso';
-import { metrics } from './data';
+import { metrics as staticMetrics } from './data';
 
 function MetricCard({ m }) {
   if (m.track) {
@@ -52,7 +52,30 @@ function MetricCard({ m }) {
   );
 }
 
-export default function MetricCards() {
+export default function MetricCards({ stats = null }) {
+  // Jika stats diterima dari backend (Laravel Inertia), override nilai statis.
+  // Mapping: stats.total_absensi -> Total Absensi, stats.total_masuk -> Total Masuk,
+  //          stats.total_keluar -> Total Keluar, stats.total_kartu_siswa -> Total Kartu Siswa,
+  //          stats.total_kartu_tamu -> Total Kartu Tamu
+  const metrics = !stats
+    ? staticMetrics
+    : staticMetrics.map((m) => {
+        switch (m.key) {
+          case 'total':
+            return { ...m, value: String(stats.total_absensi ?? 0) };
+          case 'ontime':
+            return { ...m, value: String(stats.total_masuk ?? 0) };
+          case 'late':
+            return { ...m, value: String(stats.total_keluar ?? 0) };
+          case 'leave':
+            return { ...m, value: String(stats.total_kartu_siswa ?? 0) };
+          case 'absent':
+            return { ...m, value: String(stats.total_kartu_tamu ?? 0) };
+          default:
+            return m;
+        }
+      });
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-space-md">
       {metrics.map((m) => (

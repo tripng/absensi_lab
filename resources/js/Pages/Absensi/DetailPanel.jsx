@@ -1,10 +1,23 @@
 import { useState } from 'react';
 import Mso from './Mso';
 import EmployeeCard from './EmployeeCard';
-import { employees, selectedDate } from './data';
+import { employees as fallbackEmployees } from './data';
 
-export default function DetailPanel() {
-  const [activeTab, setActiveTab] = useState('all');
+/**
+ * Format "hari, tanggal bulan tahun" sesuai locale Indonesia,
+ * selalu menampilkan tanggal/waktu saat ini (hari ini).
+ */
+const formatToday = () => {
+  const d = new Date();
+  const day = d.toLocaleDateString('id-ID', { weekday: 'long' });
+  const date = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  return `${day}, ${date}`;
+};
+
+export default function DetailPanel({ lastScans = null }) {
+  // Filter tabs reduced to two categories: Siswa and Tamu.
+  // Default filter is siswa, matching the current live behavior.
+  const [activeTab, setActiveTab] = useState('siswa');
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchChange = (e) => {
@@ -15,19 +28,40 @@ export default function DetailPanel() {
     setSearchQuery('');
   };
 
+  // Resolve the active list from live DB data (lastScans). Fall back to the
+  // static data.js employees only when lastScans is unavailable/empty so the
+  // panel never renders an empty state during offline dev.
+  const resolveList = (list) => {
+    if (!list || list.length === 0) return fallbackEmployees;
+    return list;
+  };
+
+  const siswaList = resolveList(lastScans?.siswa);
+  const tamuList = resolveList(lastScans?.tamu);
+
   const tabConfigs = [
-    { key: 'all', label: 'Semua', count: employees.length },
-    { key: 'present', label: 'Hadir', count: employees.filter((e) => e.status === 'present').length },
-    { key: 'late', label: 'Terlambat', count: employees.filter((e) => e.status === 'late').length },
-    { key: 'leave', label: 'Cuti / Izin', count: employees.filter((e) => e.status === 'leave').length },
-    { key: 'absent', label: 'Alpha', count: employees.filter((e) => e.status === 'absent').length },
+    {
+      key: 'siswa',
+      label: 'Siswa',
+      count: siswaList.length,
+    },
+    {
+      key: 'tamu',
+      label: 'Tamu',
+      count: tamuList.length,
+    },
   ];
 
-  const filteredEmployees = employees.filter((emp) => {
-    const matchesTab = activeTab === 'all' || emp.status === activeTab;
+  const activeList = activeTab === 'siswa' ? siswaList : tamuList;
+
+  const filteredEmployees = activeList.filter((emp) => {
     const query = searchQuery.toLowerCase().trim();
-    const matchesQuery = query === '' || emp.name.toLowerCase().includes(query) || emp.empId.toLowerCase().includes(query) || emp.role.toLowerCase().includes(query);
-    return matchesTab && matchesQuery;
+    const matchesQuery =
+      query === '' ||
+      (emp.name && emp.name.toLowerCase().includes(query)) ||
+      (emp.empId && emp.empId.toLowerCase().includes(query)) ||
+      (emp.role && emp.role.toLowerCase().includes(query));
+    return matchesQuery;
   });
 
   return (
@@ -39,48 +73,29 @@ export default function DetailPanel() {
           <div>
             <div className="flex items-center gap-space-xs text-primary font-label-sm text-label-sm uppercase font-bold tracking-wider mb-0.5">
               <span className="w-2 h-2 rounded-full bg-primary" />
-              <span>Detail Rekapitulasi</span>
+              <span>5 Absen Terakhir</span>
             </div>
             <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
-              {selectedDate.day}
+              {formatToday()}
             </h3>
             <span className="font-body-sm text-body-sm text-outline">
-              {selectedDate.recordCount}
+              5 absen terbaru hari ini
             </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              className="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors"
-              title="Refresh Data"
-            >
-              <Mso name="refresh" />
-            </button>
-            <button
-              type="button"
-              className="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors"
-              title="Pilihan Tampilan"
-            >
-              <Mso name="more_vert" />
-            </button>
           </div>
         </div>
 
-        {/* Category Filter Tabs */}
+        {/* Category Filter Tabs — now only Siswa / Tamu */}
         <div className="flex items-center gap-1 overflow-x-auto pb-1" id="filter-tabs">
           {tabConfigs.map((tab) => {
             const baseClasses =
               'tab-btn px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container font-label-md text-label-md font-semibold shrink-0 transition-all hover:bg-surface flex items-center gap-1';
             let selectedClasses = '';
-            if (tab.key === 'present') selectedClasses = 'bg-primary text-on-primary';
-            else if (tab.key === 'late') selectedClasses = 'bg-secondary text-on-secondary';
-            else if (tab.key === 'leave') selectedClasses = 'bg-primary text-on-primary';
-            else if (tab.key === 'absent') selectedClasses = 'bg-error text-on-error';
-            else selectedClasses = 'bg-primary text-on-primary';
+            if (tab.key === 'siswa') selectedClasses = 'bg-primary text-on-primary';
+            else if (tab.key === 'tamu') selectedClasses = 'bg-tertiary text-on-tertiary';
 
             const isActive = activeTab === tab.key;
             const cls = isActive
-              ? `${baseClasses.replace('bg-surface-container-low', 'bg-primary').replace('hover:bg-surface', 'hover:bg-primary/90').replace('text-on-surface', 'text-on-primary')} ${selectedClasses}`
+              ? `${baseClasses.replace('bg-surface-container-low', 'bg-primary').replace('hover:bg-surface', 'hover:bg-primary/90').replace('text-on-surface', 'text-on-primary')} ${selectedClasses.replace('bg-primary text-on-primary', '')}`
               : baseClasses;
 
             return (
@@ -104,7 +119,7 @@ export default function DetailPanel() {
             type="text"
             id="employee-search"
             className="w-full h-10 pl-9 pr-9 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest shadow-sm transition-all"
-            placeholder="Cari nama karyawan, jabatan, atau NIK..."
+            placeholder="Cari nama, nisn/nip, atau kelas..."
             value={searchQuery}
             onChange={handleSearchChange}
           />
@@ -127,7 +142,7 @@ export default function DetailPanel() {
               Tidak ada data yang cocok.
             </div>
           ) : (
-            filteredEmployees.map((emp, i) => <EmployeeCard key={i} emp={emp} />)
+            filteredEmployees.map((emp, i) => <EmployeeCard key={`${activeTab}-${emp.empId}-${i}`} emp={emp} />)
           )}
         </div>
 

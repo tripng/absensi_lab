@@ -5,7 +5,7 @@ import DetailPanel from './DetailPanel';
 import Navbar from './Navbar';
 import Topbar from './Topbar';
 
-export default function AbsensiIndex() {
+export default function AbsensiIndex({ stats = null, logAkses = [], lastScans = null }) {
   return (
     <div className="flex h-screen overflow-hidden bg-background text-on-surface">
       {/* Sidebar navigation */}
@@ -23,12 +23,12 @@ export default function AbsensiIndex() {
             <HeaderDeck />
 
             {/* Realtime Metric Badges */}
-            <MetricCards />
+            <MetricCards stats={stats} />
 
             {/* Main Canvas: 65% Calendar + 35% Detail Panel */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start pb-space-xl">
-              <CalendarGrid />
-              <DetailPanel />
+              <CalendarGrid logAkses={logAkses} />
+              <DetailPanel lastScans={lastScans} />
             </div>
           </div>
         </main>
