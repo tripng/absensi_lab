@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // MariaDB di env ini: migrate:fresh dropAllTables tak jalan drop table
+        // `sessions` (dropping only selected base tables), sehingga create()
+        // error "already exists". dropIfExists jadi idempotent & safe on fresh.
+        Schema::dropIfExists('sessions');
+
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->unique();
             $table->foreignId('user_id')->nullable()->index();

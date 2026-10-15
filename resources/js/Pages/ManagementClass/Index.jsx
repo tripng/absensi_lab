@@ -1,12 +1,10 @@
 import { useState } from 'react';
+import { router, usePage } from '@inertiajs/react';
 import Navbar from '../Absensi/Navbar';
 import Topbar from '../Absensi/Topbar';
 import Mso from '../Absensi/Mso';
 import ScheduleForm from './ScheduleForm';
 import ScheduleCard from './ScheduleCard';
-
-// Kelas X1–X15 untuk dropdown
-const kelasList = Array.from({ length: 15 }, (_, i) => `X${i + 1}`);
 
 // Hari kerja Senin–Jumat
 const weekdays = [
@@ -17,65 +15,28 @@ const weekdays = [
   { value: 'jumat', label: 'Jumat' },
 ];
 
-// Data dummy awal (mock state)
-const initialSchedules = [
-  {
-    id: 'mock-1',
-    type: 'recurring',
-    pj: 'Rina Sari, S.Kom.',
-    kelas: 'X.1',
-    hari: 'senin',
-    jamMulai: '08:00',
-    jamSelesai: '09:30',
-    jumlahSiswa: 32,
-    alasan: 'Praktikum Pemrograman Dasar',
-    telp: '081234567890',
-  },
-  {
-    id: 'mock-2',
-    type: 'recurring',
-    pj: 'Budi Santoso, S.Pd.',
-    kelas: 'X.3',
-    hari: 'rabu',
-    jamMulai: '10:00',
-    jamSelesai: '11:30',
-    jumlahSiswa: 28,
-    alasan: 'Praktikum Jaringan Komputer',
-    telp: '081345678901',
-  },
-  {
-    id: 'mock-3',
-    type: 'one-time',
-    pj: 'Dewi Lestari, S.Kom.',
-    kelas: 'X.5',
-    tanggalMulai: '2026-10-20T09:00',
-    tanggalSelesai: '2026-10-20T12:00',
-    jumlahSiswa: 25,
-    alasan: 'Ujian Tengah Semester Ganjil',
-    telp: '081456789012',
-  },
-  {
-    id: 'mock-4',
-    type: 'one-time',
-    pj: 'Andi Wijaya, S.Pd.',
-    kelas: 'X.7',
-    tanggalMulai: '2026-10-22T13:00',
-    tanggalSelesai: '2026-10-22T15:00',
-    jumlahSiswa: 30,
-    alasan: 'Kompetisi Robotik Antar-Sekolah',
-    telp: '081567890123',
-  },
-];
-
 const badgeColor = {
   recurring: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
   'one-time': 'bg-secondary-fixed text-on-secondary-fixed-variant',
 };
 
-export default function ManagementClassIndex() {
-  const [schedules, setSchedules] = useState(initialSchedules);
+/**
+ * Props dari ManagementClassController::index():
+ *   kelasList, ruangList, guruList, recurring, pinjaman
+ * Data mapping (issue #3 tabel 4-5):
+ *   recurring.pj  = guru.pengguna.nama   | pinjaman.pj = users.name (peminjam)
+ *   recurring.alasan  = jadwal_ajaran.keterangan
+ *   recurring.telp    = jadwal_ajaran.no_telepon
+ *   recurring.ruangan = ruang_ajaran (nama_ruangan / labkom)
+ */
+export default function ManagementClassIndex({
+  kelasList, ruangList, guruList, recurring = [], pinjaman = [],
+}) {
   const [activeTab, setActiveTab] = useState('recurring');
   const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState(null);
+
+  const { auth } = usePage().props;
 
   const formatTimeDisplay = (s) => {
     if (s.type === 'recurring') {
@@ -91,16 +52,28 @@ export default function ManagementClassIndex() {
     return `${fmt(dMulai)} – ${fmt(dSelesai)}`;
   };
 
+  // POST → 302 redirect ke index; Inertia ikut & server kirim props terbaru.
   const handleAdd = (formData) => {
-    const newSchedule = {
-      id: `sched-${Date.now()}`,
-      ...formData,
-    };
-    setSchedules([newSchedule, ...schedules]);
-    setShowForm(false);
+    router.post('/management-class', formData, {
+      preserveScroll: true,
+      onSuccess: () => setShowForm(false),
+    });
   };
 
-  const activeSchedules = schedules.filter((s) => s.type === activeTab);
+  const handleEdit = (schedule) => {
+    setEditing(schedule);
+    setShowForm(true);
+  };
+
+  const handleDelete = (schedule) => {
+    if (!confirm('Hapus jadwal ini?')) return;
+    router.delete(`/management-class/${schedule.id}`, {
+      data: { type: schedule.type },
+      preserveScroll: true,
+    });
+  };
+
+  const activeSchedules = activeTab === 'recurring' ? recurring : pinjaman;
 
   return (
     <div className="flex h-screen overflow-hidden bg-background text-on-surface">
@@ -123,7 +96,7 @@ export default function ManagementClassIndex() {
             <div className="mb-space-md flex gap-space-xs p-1 bg-surface-container-high rounded-xl">
               <button
                 type="button"
-                onClick={() => { setActiveTab('recurring'); setShowForm(false); }}
+                onClick={() => { setActiveTab('recurring'); setShowForm(false); setEditing(null); }}
                 className={`flex-1 flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-md font-semibold transition-all ${
                   activeTab === 'recurring'
                     ? 'bg-primary text-on-primary shadow'
@@ -134,7 +107,7 @@ export default function ManagementClassIndex() {
               </button>
               <button
                 type="button"
-                onClick={() => { setActiveTab('one-time'); setShowForm(false); }}
+                onClick={() => { setActiveTab('one-time'); setShowForm(false); setEditing(null); }}
                 className={`flex-1 flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-md font-semibold transition-all ${
                   activeTab === 'one-time'
                     ? 'bg-primary text-on-primary shadow'
@@ -145,7 +118,7 @@ export default function ManagementClassIndex() {
               </button>
             </div>
 
-            {/* Add button + form */}
+            {/* Add button */}
             {!showForm && (
               <div className="mb-space-md">
                 <button
@@ -158,14 +131,19 @@ export default function ManagementClassIndex() {
               </div>
             )}
 
+            {/* Form */}
             {showForm && (
               <ScheduleForm
                 key={activeTab}
                 activeTab={activeTab}
                 kelasList={kelasList}
+                ruangList={ruangList}
+                guruList={guruList}
                 weekdays={weekdays}
-                onCancel={() => setShowForm(false)}
-                onSubmit={handleAdd}
+                editing={editing}
+                onCancel={() => { setShowForm(false); setEditing(null); }}
+                onSuccess={() => { setShowForm(false); setEditing(null); }}
+                currentUser={auth?.user?.name}
               />
             )}
 
@@ -174,7 +152,9 @@ export default function ManagementClassIndex() {
               {activeSchedules.length === 0 ? (
                 <div className="py-space-xl text-center text-on-surface-variant">
                   <Mso name="inbox_empty" size={40} className="mx-auto mb-space-sm text-outline" />
-                  <p className="font-body-md">Belum ada jadwal {activeTab === 'recurring' ? 'berulang' : 'pinjaman'}.</p>
+                  <p className="font-body-md">
+                    Belum ada jadwal {activeTab === 'recurring' ? 'berulang' : 'pinjaman'}.
+                  </p>
                 </div>
               ) : (
                 activeSchedules.map((s) => (
@@ -184,6 +164,8 @@ export default function ManagementClassIndex() {
                     badgeColor={badgeColor}
                     weekdays={weekdays}
                     formatTime={formatTimeDisplay}
+                    onEdit={() => handleEdit(s)}
+                    onDelete={() => handleDelete(s)}
                   />
                 ))
               )}

@@ -21,11 +21,22 @@ Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
 Route::get('/data', [DataController::class, 'index'])->name('data');
 Route::get('/data/export', [DataController::class, 'export'])->name('data.export');
 
-Route::get('/management-class', [ManagementClassController::class, 'index'])->name('management-class');
+Route::middleware('auth')->group(function () {
+    // Manajemen Jadwal Lab — terhubung ke database (issue #3).
+    Route::get('/management-class', [ManagementClassController::class, 'index'])
+        ->name('management-class');
+    Route::post('/management-class', [ManagementClassController::class, 'store'])
+        ->name('management-class.store');
+    Route::put('/management-class/{schedule}', [ManagementClassController::class, 'update'])
+        ->name('management-class.update');
+    Route::delete('/management-class/{schedule}', [ManagementClassController::class, 'destroy'])
+        ->name('management-class.destroy');
+});
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-});
+    // Lab app has no generic dashboard; land logged-in users straight in the lab schedule manager.
+    return redirect()->route('management-class');
+})->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

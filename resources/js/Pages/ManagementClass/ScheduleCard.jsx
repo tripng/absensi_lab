@@ -1,6 +1,13 @@
 import Mso from '../Absensi/Mso';
 
-export default function ScheduleCard({ schedule, badgeColor, weekdays, formatTime }) {
+/**
+ * schedule shape (dari ManagementClassController index props):
+ *   recurring: { id, type:'recurring', pj, kelas, hari, jamMulai, jamSelesai,
+ *                jumlahSiswa, alasan, telp, ruangan, mapel }
+ *   one-time : { id, type:'one-time', pj, kelas, tanggalMulai, tanggalSelesai,
+ *                jumlahSiswa, alasan, telp, ruangan, mapel }
+ */
+export default function ScheduleCard({ schedule, badgeColor, weekdays, formatTime, onEdit, onDelete }) {
   const badgeClass = schedule.type === 'recurring' ? badgeColor.recurring : badgeColor['one-time'];
   const badgeLabel = schedule.type === 'recurring' ? 'Berulang' : 'Pinjaman';
   const icon = schedule.type === 'recurring' ? 'calendar_today' : 'event_available';
@@ -15,8 +22,29 @@ export default function ScheduleCard({ schedule, badgeColor, weekdays, formatTim
             {badgeLabel}
           </span>
         </div>
+
         <div className="flex items-center gap-space-xs text-on-surface-variant">
-          <Mso name="more_vert" size={18} />
+          {schedule.ruangan && (
+            <span className="font-label-xs text-on-surface-variant">
+              <Mso name="location_on" size={14} className="inline mr-0.5" />{schedule.ruangan}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={onEdit}
+            className="p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg transition-colors"
+            title="Edit"
+          >
+            <Mso name="edit" size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={onDelete}
+            className="p-space-xs text-on-surface-variant hover:text-error hover:bg-error-container/10 rounded-lg transition-colors"
+            title="Hapus"
+          >
+            <Mso name="delete" size={16} />
+          </button>
         </div>
       </div>
 
@@ -35,6 +63,12 @@ export default function ScheduleCard({ schedule, badgeColor, weekdays, formatTim
             <span className="font-label-sm text-on-surface-variant">Jumlah Siswa</span>
             <span className="font-body-md text-body-md text-on-surface block">{schedule.jumlahSiswa}</span>
           </div>
+          {schedule.mapel && (
+            <div>
+              <span className="font-label-sm text-on-surface-variant">Mapel</span>
+              <span className="font-body-md text-body-md text-on-surface block">{schedule.mapel}</span>
+            </div>
+          )}
         </div>
 
         {/* Kolom kanan: waktu + alasan */}
@@ -53,15 +87,13 @@ export default function ScheduleCard({ schedule, badgeColor, weekdays, formatTim
               </div>
             </>
           ) : (
-            <>
-              <div>
-                <span className="font-label-sm text-on-surface-variant">Rentang Waktu</span>
-                <span className="font-body-md text-body-md text-on-surface block">
-                  {formatTime(schedule)}
-                </span>
-              </div>
-            </>
-          )}
+            <div>
+              <span className="font-label-sm text-on-surface-variant">Rentang Waktu</span>
+              <span className="font-body-md text-body-md text-on-surface block">
+                {formatTime(schedule)}
+              </span>
+            </div>
+          )}{' '}
           <div>
             <span className="font-label-sm text-on-surface-variant">Alasan</span>
             <span className="font-body-sm text-body-sm text-on-surface-variant block break-words">
@@ -70,7 +102,9 @@ export default function ScheduleCard({ schedule, badgeColor, weekdays, formatTim
           </div>
           <div>
             <span className="font-label-sm text-on-surface-variant">No. Telepon</span>
-            <span className="font-body-sm text-body-sm text-on-surface-variant block">{schedule.telp}</span>
+            <span className="font-body-sm text-body-sm text-on-surface-variant block">
+              {schedule.telp}
+            </span>
           </div>
         </div>
       </div>
