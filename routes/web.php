@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\DataController;
+use App\Http\Controllers\ManagementClassController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,8 @@ Route::get('/', function () {
 Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
 Route::get('/data', [DataController::class, 'index'])->name('data');
 Route::get('/data/export', [DataController::class, 'export'])->name('data.export');
+
+Route::get('/management-class', [ManagementClassController::class, 'index'])->name('management-class');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
