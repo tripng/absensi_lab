@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, router } from '@inertiajs/react';
+import { useForm, router, usePage } from '@inertiajs/react';
 import Navbar from '../Absensi/Navbar';
 import Topbar from '../Absensi/Topbar';
 import Mso from '../Absensi/Mso';
@@ -54,6 +54,7 @@ export default function MasterDataIndex({
   const lists = { guru: guruList, kelas: kelasList, ruang: ruangList, mapel: mapelList };
   const current = lists[activeTab] ?? [];
   const fields = formConfig[activeTab] ?? [];
+  const success = usePage().props.success;
 
   const openCreate = () => {
     setEditing(null);
@@ -118,6 +119,17 @@ export default function MasterDataIndex({
                 <Mso name="add" /> Tambah {tabs[activeTab]}
               </button>
             </div>
+
+            {/* Success flash */}
+            {success && (
+              <div
+                role="status"
+                className="mb-space-md flex items-center gap-space-xs px-space-md py-space-sm bg-tertiary-fixed text-on-tertiary-fixed-variant border border-tertiary/20 rounded-xl font-body-md"
+              >
+                <Mso name="check_circle" size={18} />
+                <span>{success}</span>
+              </div>
+            )}
 
             {/* Table */}
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
