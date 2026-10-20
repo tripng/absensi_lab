@@ -175,7 +175,10 @@ export default function MasterDataIndex({
                               if (confirm(`Hapus ${tabs[activeTab]} ini?`)) {
                                 router.delete(`/master-data/${activeTab}/${row.id}`, {
                                   preserveScroll: true,
-                                  onError: () => {},
+                                  onError: (errors) => {
+                                    const message = Object.values(errors ?? {}).join('\n');
+                                    alert(message || 'Gagal menghapus data.');
+                                  },
                                 });
                               }
                             }}
