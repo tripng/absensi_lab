@@ -13,7 +13,7 @@ import Mso from '../Absensi/Mso';
  * Field name dipakai snake_case agar langsung match backend validate.
  */
 export default function ScheduleForm({
-  activeTab, kelasList, ruangList, guruList, weekdays, editing, onCancel, onSuccess,
+  activeTab, kelasList, ruangList, guruList, mapelList = [], weekdays, editing, onCancel, onSuccess,
   currentUser,
 }) {
   // initialState disesuaikan tiap tab (keyed by activeTab)
@@ -44,20 +44,20 @@ export default function ScheduleForm({
   const initialData = activeTab === 'recurring' ? recurringInitial() : onetimeInitial();
 
   // Jika mode edit, init dari schedule yang diklik.
-  // Listing props kirim nama (bukan id mentah) untuk kelas/guru/ruangan →
-  // lookup balik ke list supaya dropdown prefilled.
+  // Controller kini kirimkan ID mentah (kelas_id/ruang_ajaran_id/guru_id/mapel_id)
+  // sehingga dropdown prefill by-ID; name-lookup tetap jadi fallback.
   Object.assign(initialData, editing
     ? {
-        kelas_id: editing.kelas_id
-          ?? (kelasList.find((k) => k.nama === editing.kelas)?.id ?? ''),
-        ruang_ajaran_id: editing.ruang_ajaran_id
-          ?? (ruangList.find((r) => r.label === editing.ruangan)?.id ?? ''),
-        guru_id: editing.guru_id
-          ?? (guruList.find((g) => g.nama === editing.pj)?.id ?? ''),
-        mapel_id: editing.mapel_id ?? '',
-        jumlah_siswa: editing.jumlah_siswa ?? '',
-        no_telepon: editing.no_telepon ?? '',
-        keterangan: editing.keterangan ?? '',
+        kelas_id: editing?.kelas_id
+          ?? (kelasList.find((k) => k.nama === editing?.kelas)?.id ?? ''),
+        ruang_ajaran_id: editing?.ruang_ajaran_id
+          ?? (ruangList.find((r) => r.label === editing?.ruangan)?.id ?? ''),
+        guru_id: editing?.guru_id
+          ?? (guruList.find((g) => g.nama === editing?.pj)?.id ?? ''),
+        mapel_id: editing?.mapel_id ?? '',
+        jumlah_siswa: editing?.jumlah_siswa ?? '',
+        no_telepon: editing?.telp ?? '',
+        keterangan: editing?.keterangan ?? '',
         ...(activeTab === 'recurring'
           ? {
               hari: editing.hari ?? 'senin',
@@ -118,8 +118,18 @@ export default function ScheduleForm({
       </span>
     ) : null;
 
+  // Render helper: non-field error (mis. time_conflict)
+  const ge = (field) =>
+    errors[field] ? (
+      <div className="mb-space-sm flex items-start gap-space-xs p-space-sm bg-error-container/10 border border-error-container/30 rounded-xl text-on-error">
+        <Mso name="error" size={18} className="mt-px shrink-0" />
+        <span className="font-body-sm">{errors[field]}</span>
+      </div>
+    ) : null;
+
   return (
     <div className="mb-space-lg bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-space-lg">
+      {ge('time_conflict')}
       <div className="flex items-center justify-between mb-space-md">
         <h2 className="font-headline-sm text-headline-sm font-bold text-on-surface">
           {editing
@@ -210,9 +220,11 @@ export default function ScheduleForm({
               className="w-full px-space-sm py-space-xs border border-outline-variant rounded-xl bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">— tidak pilih —</option>
-              {/** mapelList belum diprops; kosongkan sampai controller kirim */}
-              {/* {mapelList?.map((m) => <option key={m.id} value={m.id}>{m.nama}</option>)} */}
+              {mapelList.map((m) => (
+                <option key={m.id} value={m.id}>{m.nama}</option>
+              ))}
             </select>
+            {fe('mapel_id')}
           </div>
 
           {/* --- Alasan --- */}

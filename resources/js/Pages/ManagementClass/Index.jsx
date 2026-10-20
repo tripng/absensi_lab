@@ -30,7 +30,7 @@ const badgeColor = {
  *   recurring.ruangan = ruang_ajaran (nama_ruangan / labkom)
  */
 export default function ManagementClassIndex({
-  kelasList, ruangList, guruList, recurring = [], pinjaman = [],
+  kelasList, ruangList, guruList, mapelList = [], recurring = [], pinjaman = [],
 }) {
   const [activeTab, setActiveTab] = useState('recurring');
   const [showForm, setShowForm] = useState(false);
@@ -139,6 +139,7 @@ export default function ManagementClassIndex({
                 kelasList={kelasList}
                 ruangList={ruangList}
                 guruList={guruList}
+                mapelList={mapelList}
                 weekdays={weekdays}
                 editing={editing}
                 onCancel={() => { setShowForm(false); setEditing(null); }}
