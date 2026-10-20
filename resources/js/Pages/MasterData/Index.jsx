@@ -18,8 +18,6 @@ import Modal from '@/Components/Modal';
  *
  * Nama field di form pakai snake_case agar langsung match validation backend.
  */
-const emptyOption = { value: '', label: '— tidak pilih —' };
-
 // Kolom tabel per entity (key harus match field name atau label yang ada di list props).
 const columnsFor = {
   guru: [
@@ -262,7 +260,6 @@ function MasterDataForm({ activeTab, fields, editing, onSuccess }) {
               onChange={(e) => form.setData(f.name, e.target.value)}
               className="w-full px-space-sm py-space-xs border border-outline-variant rounded-xl bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
             >
-              <option value="">{emptyOption.label}</option>
               {f.options?.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
               ))}
