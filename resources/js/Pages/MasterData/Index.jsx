@@ -265,12 +265,14 @@ function MasterDataForm({ activeTab, fields, editing, onSuccess }) {
     <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
       {fields.map((f) => (
         <div key={f.name} className="flex flex-col gap-space-xs">
-          <label className="font-label-sm text-on-surface-variant mb-space-xs block">
+          <label htmlFor={f.name} className="font-label-sm text-on-surface-variant mb-space-xs block">
             {f.label}
             {f.required ? ' *' : ''}
           </label>
           {f.type === 'select' ? (
             <select
+              id={f.name}
+              name={f.name}
               value={form.data[f.name] ?? ''}
               onChange={(e) => form.setData(f.name, e.target.value)}
               className="w-full px-space-sm py-space-xs border border-outline-variant rounded-xl bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
@@ -281,6 +283,8 @@ function MasterDataForm({ activeTab, fields, editing, onSuccess }) {
             </select>
           ) : (
             <input
+              id={f.name}
+              name={f.name}
               type={f.type === 'number' ? 'number' : 'text'}
               value={form.data[f.name] ?? ''}
               onChange={(e) => form.setData(f.name, e.target.value)}
