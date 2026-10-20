@@ -3,6 +3,7 @@
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\ManagementClassController;
+use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,14 @@ Route::middleware('auth')->group(function () {
         ->name('management-class.update');
     Route::delete('/management-class/{schedule}', [ManagementClassController::class, 'destroy'])
         ->name('management-class.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    // Master Data — CRUD Guru / Kelas / Ruangan / Mapel (issue #5).
+    Route::get('/master-data', [MasterDataController::class, 'index'])->name('master-data');
+    Route::post('/master-data/{entity}', [MasterDataController::class, 'store'])->name('master-data.store');
+    Route::put('/master-data/{entity}/{id}', [MasterDataController::class, 'update'])->name('master-data.update');
+    Route::delete('/master-data/{entity}/{id}', [MasterDataController::class, 'destroy'])->name('master-data.destroy');
 });
 
 Route::get('/dashboard', function () {
