@@ -47,6 +47,65 @@ it('authenticated index emits master props from DB', function () {
 });
 
 // ----------------------------------------------------------------------
+// Per-entity pages
+// ----------------------------------------------------------------------
+it('guru page emits guruList + flash + formConfig', function () {
+    $admin = makeMasterAdmin();
+    $this->actingAs($admin)
+        ->withSession(['success' => 'Guru berhasil ditambahkan.'])
+        ->get('/master-data/guru')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('MasterData/Guru/Index')
+            ->has('tabs')
+            ->has('guruList', 5)
+            ->has('formConfig.guru')
+            ->where('success', 'Guru berhasil ditambahkan.'));
+});
+
+it('kelas page emits kelasList + flash + formConfig', function () {
+    $admin = makeMasterAdmin();
+    $this->actingAs($admin)
+        ->withSession(['success' => 'Kelas berhasil ditambahkan.'])
+        ->get('/master-data/kelas')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('MasterData/Kelas/Index')
+            ->has('tabs')
+            ->has('kelasList', 15)
+            ->has('formConfig.kelas')
+            ->where('success', 'Kelas berhasil ditambahkan.'));
+});
+
+it('ruang page emits ruangList + flash + formConfig', function () {
+    $admin = makeMasterAdmin();
+    $this->actingAs($admin)
+        ->withSession(['success' => 'Ruang berhasil ditambahkan.'])
+        ->get('/master-data/ruang')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('MasterData/Ruang/Index')
+            ->has('tabs')
+            ->has('ruangList', 1)
+            ->has('formConfig.ruang')
+            ->where('success', 'Ruang berhasil ditambahkan.'));
+});
+
+it('mapel page emits mapelList + flash + formConfig', function () {
+    $admin = makeMasterAdmin();
+    $this->actingAs($admin)
+        ->withSession(['success' => 'Mapel berhasil ditambahkan.'])
+        ->get('/master-data/mapel')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('MasterData/Mapel/Index')
+            ->has('tabs')
+            ->has('mapelList', 5)
+            ->has('formConfig.mapel')
+            ->where('success', 'Mapel berhasil ditambahkan.'));
+});
+
+// ----------------------------------------------------------------------
 // Guru
 // ----------------------------------------------------------------------
 it('stores a guru (persists into pengguna + guru via shared PK)', function () {
@@ -57,7 +116,7 @@ it('stores a guru (persists into pengguna + guru via shared PK)', function () {
             'nip' => '199901012010011006',
             'jabatan' => 'Guru Tes',
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/guru');
 
     $penggunaId = DB::table('pengguna')->where('nama', 'Test Guru Baru')->value('id');
     $this->assertNotNull($penggunaId);
@@ -94,7 +153,7 @@ it('updates a guru (PUT) and persists to both tables', function () {
             'nip' => '199902022011022007',
             'jabatan' => 'Sesudah',
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/guru');
 
     $this->assertDatabaseHas('pengguna', ['id' => $penggunaId, 'nama' => 'After Edit']);
     $this->assertDatabaseHas('guru', ['id' => $penggunaId, 'jabatan' => 'Sesudah']);
@@ -109,7 +168,7 @@ it('deletes a guru (cascades to pengguna via shared PK)', function () {
 
     $this->actingAs($admin)
         ->delete("/master-data/guru/{$penggunaId}")
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/guru');
 
     $this->assertDatabaseMissing('guru', ['id' => $penggunaId]);
     $this->assertDatabaseMissing('pengguna', ['id' => $penggunaId]);
@@ -126,7 +185,7 @@ it('stores, updates, and deletes a kelas end-to-end', function () {
         ->post('/master-data/kelas', [
             'nama_kelas' => 'XI.1', 'tingkat' => 'XI', 'tahun_ajaran' => '2027/2028',
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/kelas');
 
     $kelas = Kelas::query()->where('nama_kelas', 'XI.1')->first();
     $this->assertNotNull($kelas);
@@ -137,14 +196,14 @@ it('stores, updates, and deletes a kelas end-to-end', function () {
         ->put("/master-data/kelas/{$kelas->id}", [
             'nama_kelas' => 'XI.1 (edit)', 'tingkat' => 'XI', 'tahun_ajaran' => '2028/2029',
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/kelas');
 
     $this->assertDatabaseHas('kelas', ['id' => $kelas->id, 'nama_kelas' => 'XI.1 (edit)']);
 
     // delete
     $this->actingAs($admin)
         ->delete("/master-data/kelas/{$kelas->id}")
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/kelas');
 
     $this->assertDatabaseMissing('kelas', ['id' => $kelas->id]);
 });
@@ -168,7 +227,7 @@ it('stores a ruangan with and without a labkom link, then updates + deletes', fu
         ->post('/master-data/ruang', [
             'nama_ruangan' => 'Labkom 2', 'kapasitas' => 24, 'labkom_id' => $labkomId,
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/ruang');
 
     $ruangId = RuangAjaran::query()->where('nama_ruangan', 'Labkom 2')->value('id');
     $this->assertDatabaseHas('ruang_ajaran', ['id' => $ruangId, 'labkom_id' => $labkomId, 'kapasitas' => 24]);
@@ -178,7 +237,7 @@ it('stores a ruangan with and without a labkom link, then updates + deletes', fu
         ->post('/master-data/ruang', [
             'nama_ruangan' => 'Ruang Haji', 'kapasitas' => '', 'labkom_id' => '',
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/ruang');
 
     $this->assertDatabaseHas('ruang_ajaran', ['nama_ruangan' => 'Ruang Haji', 'labkom_id' => null]);
 
@@ -187,14 +246,14 @@ it('stores a ruangan with and without a labkom link, then updates + deletes', fu
         ->put("/master-data/ruang/{$ruangId}", [
             'nama_ruangan' => 'Labkom 2 (edit)', 'kapasitas' => 20, 'labkom_id' => $labkomId,
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/ruang');
 
     $this->assertDatabaseHas('ruang_ajaran', ['id' => $ruangId, 'nama_ruangan' => 'Labkom 2 (edit)', 'kapasitas' => 20]);
 
     // delete
     $this->actingAs($admin)
         ->delete("/master-data/ruang/{$ruangId}")
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/ruang');
 
     $this->assertDatabaseMissing('ruang_ajaran', ['id' => $ruangId]);
 });
@@ -222,7 +281,7 @@ it('stores, updates, and deletes a mapel end-to-end', function () {
         ->post('/master-data/mapel', [
             'kode_mapel' => 'WEB1', 'nama_mapel' => 'Web Dasar', 'kelompok' => 'praktik', 'guru_id' => $guruId,
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/mapel');
 
     $mapel = Mapel::query()->where('kode_mapel', 'WEB1')->first();
     $this->assertNotNull($mapel);
@@ -233,7 +292,7 @@ it('stores, updates, and deletes a mapel end-to-end', function () {
         ->post('/master-data/mapel', [
             'kode_mapel' => 'WEB2', 'nama_mapel' => 'Web Lanjut', 'kelompok' => 'wajib', 'guru_id' => '',
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/mapel');
 
     $this->assertDatabaseHas('mapel', ['kode_mapel' => 'WEB2', 'guru_id' => null]);
 
@@ -242,14 +301,14 @@ it('stores, updates, and deletes a mapel end-to-end', function () {
         ->put("/master-data/mapel/{$mapel->id}", [
             'kode_mapel' => 'WEB1X', 'nama_mapel' => 'Web Dasar (edit)', 'kelompok' => 'wajib', 'guru_id' => $guruId,
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/mapel');
 
     $this->assertDatabaseHas('mapel', ['id' => $mapel->id, 'kode_mapel' => 'WEB1X', 'kelompok' => 'wajib']);
 
     // delete
     $this->actingAs($admin)
         ->delete("/master-data/mapel/{$mapel->id}")
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/mapel');
 
     $this->assertDatabaseMissing('mapel', ['id' => $mapel->id]);
 });
@@ -273,7 +332,7 @@ it('index round-trips a stored mapel through props after create', function () {
         ->post('/master-data/mapel', [
             'kode_mapel' => 'RT1', 'nama_mapel' => 'Round Trip', 'kelompok' => 'wajib', 'guru_id' => '',
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/mapel');
 
     $this->actingAs($admin)
         ->get('/master-data')
@@ -292,7 +351,7 @@ it('allows editing a seeded mapel without flagging its own kode as duplicate', f
             'nama_mapel' => 'Nama Diubah',
             'kelompok' => $mapel->kelompok,
         ])
-        ->assertRedirect('/master-data');
+        ->assertRedirect('/master-data/mapel');
 
     $this->assertDatabaseHas('mapel', ['id' => $mapel->id, 'nama_mapel' => 'Nama Diubah']);
 });
