@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         // Master data (kelas, labkom, lokasi, guru, mapel, user admin)
         $this->call([
             MasterTablesSeeder::class,
+            StudentEnrollmentSeeder::class,
         ]);
     }
 }
