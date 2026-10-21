@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     // Master Data — CRUD Guru / Kelas / Ruangan / Mapel (issue #5).
     Route::get('/master-data', [MasterDataController::class, 'index'])->name('master-data');
+    Route::get('/master-data/{entity}', [MasterDataController::class, 'index'])->name('master-data.entity');
     Route::post('/master-data/{entity}', [MasterDataController::class, 'store'])->name('master-data.store');
     Route::put('/master-data/{entity}/{id}', [MasterDataController::class, 'update'])->name('master-data.update');
     Route::delete('/master-data/{entity}/{id}', [MasterDataController::class, 'destroy'])->name('master-data.destroy');

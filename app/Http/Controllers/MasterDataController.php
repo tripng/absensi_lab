@@ -38,17 +38,31 @@ class MasterDataController extends Controller
     ];
 
     /**
-     * Render halaman master data dengan semua list + konfig form.
+     * Render dashboard master data (tanpa entity) atau halaman per entity.
+     * Dashboard tetap mengirim semua list agar ringkasan + test existing utuh.
      */
-    public function index(): Response
+    public function index(?string $entity = null): Response
     {
-        return Inertia::render('MasterData/Index', [
+        if ($entity === null) {
+            return Inertia::render('MasterData/Index', [
+                'tabs' => self::TABS,
+                'guruList' => $this->guruList(),
+                'kelasList' => $this->kelasList(),
+                'ruangList' => $this->ruangList(),
+                'mapelList' => $this->mapelList(),
+                'formConfig' => $this->formConfig(),
+                'success' => session('success'),
+            ]);
+        }
+
+        $this->ensureEntity($entity);
+        $listKey = $entity.'List';
+
+        return Inertia::render('MasterData/'.ucfirst($entity).'/Index', [
             'tabs' => self::TABS,
-            'guruList' => $this->guruList(),
-            'kelasList' => $this->kelasList(),
-            'ruangList' => $this->ruangList(),
-            'mapelList' => $this->mapelList(),
+            $listKey => $this->{$listKey}(),
             'formConfig' => $this->formConfig(),
+            'success' => session('success'),
         ]);
     }
 
@@ -58,7 +72,7 @@ class MasterDataController extends Controller
         $validated = $request->validate($this->rules($entity));
         $this->createRecord($entity, $validated);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil ditambahkan.');
+        return redirect("/master-data/{$entity}")->with('success', ucfirst($entity).' berhasil ditambahkan.');
     }
 
     public function update(Request $request, string $entity, $id)
@@ -67,7 +81,7 @@ class MasterDataController extends Controller
         $validated = $request->validate($this->rules($entity, (int) $id));
         $this->updateRecord($entity, $id, $validated);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil diperbarui.');
+        return redirect("/master-data/{$entity}")->with('success', ucfirst($entity).' berhasil diperbarui.');
     }
 
     public function destroy(Request $request, string $entity, $id)
@@ -75,7 +89,7 @@ class MasterDataController extends Controller
         $this->ensureEntity($entity);
         $this->deleteRecord($entity, $id);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil dihapus.');
+        return redirect("/master-data/{$entity}")->with('success', ucfirst($entity).' berhasil dihapus.');
     }
 
     /** Abort 404 bila entity bukan tab yang didukung. */
