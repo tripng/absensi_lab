@@ -5,6 +5,7 @@ use App\Http\Controllers\DataController;
 use App\Http\Controllers\ManagementClassController;
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentEnrollmentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +41,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/master-data/{entity}', [MasterDataController::class, 'store'])->name('master-data.store');
     Route::put('/master-data/{entity}/{id}', [MasterDataController::class, 'update'])->name('master-data.update');
     Route::delete('/master-data/{entity}/{id}', [MasterDataController::class, 'destroy'])->name('master-data.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    // Enrollment History — riwayat penempatan kelas siswa per tahun ajaran.
+    Route::get('/student-enrollments', [StudentEnrollmentController::class, 'index'])
+        ->name('student-enrollments');
+    Route::post('/student-enrollments', [StudentEnrollmentController::class, 'store'])
+        ->name('student-enrollments.store');
+    Route::put('/student-enrollments/{enrollment}', [StudentEnrollmentController::class, 'update'])
+        ->name('student-enrollments.update');
+    Route::delete('/student-enrollments/{enrollment}', [StudentEnrollmentController::class, 'destroy'])
+        ->name('student-enrollments.destroy');
 });
 
 Route::get('/dashboard', function () {
