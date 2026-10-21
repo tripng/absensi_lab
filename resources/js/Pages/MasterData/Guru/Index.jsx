@@ -18,7 +18,18 @@ export default function GuruIndex({ guruList = [], formConfig = {} }) {
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
   const fields = formConfig[entity] ?? [];
-  const success = usePage().props.success;
+  const { success, search: initialSearch = '' } = usePage().props;
+  const [query, setQuery] = useState(initialSearch);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    router.get('/master-data/guru', value === '' ? {} : { search: value }, {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+    });
+  };
 
   const openCreate = () => {
     setEditing(null);
@@ -55,7 +66,23 @@ export default function GuruIndex({ guruList = [], formConfig = {} }) {
               </p>
             </div>
 
-            <div className="mb-space-md flex justify-between items-center">
+            <div className="mb-space-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-space-sm">
+              <div className="relative w-full sm:max-w-sm">
+                <Mso
+                  name="search"
+                  size={18}
+                  className="absolute left-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant"
+                />
+                <input
+                  type="text"
+                  id="guru-search"
+                  name="search"
+                  value={query}
+                  onChange={handleSearch}
+                  placeholder="Cari nama atau NIP..."
+                  className="w-full pl-10 pr-space-sm py-space-sm border border-outline-variant rounded-xl bg-surface-container-high text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
               <button
                 type="button"
                 onClick={openCreate}

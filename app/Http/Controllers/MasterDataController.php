@@ -41,7 +41,7 @@ class MasterDataController extends Controller
      * Render dashboard master data (tanpa entity) atau halaman per entity.
      * Dashboard tetap mengirim semua list agar ringkasan + test existing utuh.
      */
-    public function index(?string $entity = null): Response
+    public function index(Request $request, ?string $entity = null): Response
     {
         if ($entity === null) {
             return Inertia::render('MasterData/Index', [
@@ -57,13 +57,20 @@ class MasterDataController extends Controller
 
         $this->ensureEntity($entity);
         $listKey = $entity.'List';
+        $search = $entity === 'guru' ? trim((string) $request->query('search', '')) : null;
 
-        return Inertia::render('MasterData/'.ucfirst($entity).'/Index', [
+        $props = [
             'tabs' => self::TABS,
-            $listKey => $this->{$listKey}(),
+            $listKey => $entity === 'guru' ? $this->guruList($search) : $this->{$listKey}(),
             'formConfig' => $this->formConfig(),
             'success' => session('success'),
-        ]);
+        ];
+
+        if ($entity === 'guru') {
+            $props['search'] = $search;
+        }
+
+        return Inertia::render('MasterData/'.ucfirst($entity).'/Index', $props);
     }
 
     public function store(Request $request, string $entity)
@@ -103,9 +110,9 @@ class MasterDataController extends Controller
     // ------------------------------------------------------------------
     // List helpers (kirim ke UI sebagai props tabel).
     // ------------------------------------------------------------------
-    protected function guruList(): array
+    protected function guruList(?string $search = null): array
     {
-        return Guru::query()
+        $rows = Guru::query()
             ->with('pengguna')
             ->orderBy('id')
             ->get(['id', 'nip', 'jabatan'])
@@ -115,8 +122,15 @@ class MasterDataController extends Controller
                 'nip' => $g->nip,
                 'jabatan' => $g->jabatan,
             ])
-            ->values()
-            ->all();
+            ->values();
+
+        if ($search !== null && $search !== '') {
+            $needle = mb_strtolower($search);
+            $rows = $rows->filter(fn (array $g) => str_contains(mb_strtolower((string) $g['nama']), $needle)
+                || str_contains(mb_strtolower((string) $g['nip']), $needle));
+        }
+
+        return $rows->values()->all();
     }
 
     protected function kelasList(): array
