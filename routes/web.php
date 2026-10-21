@@ -25,14 +25,14 @@ Route::get('/data/export', [DataController::class, 'export'])->name('data.export
 
 Route::middleware('auth')->group(function () {
     // Manajemen Jadwal Lab — terhubung ke database (issue #3).
-    Route::get('/management-class', [ManagementClassController::class, 'index'])
-        ->name('management-class');
-    Route::post('/management-class', [ManagementClassController::class, 'store'])
-        ->name('management-class.store');
-    Route::put('/management-class/{schedule}', [ManagementClassController::class, 'update'])
-        ->name('management-class.update');
-    Route::delete('/management-class/{schedule}', [ManagementClassController::class, 'destroy'])
-        ->name('management-class.destroy');
+    Route::get('/management-schedule', [ManagementClassController::class, 'index'])
+        ->name('management-schedule');
+    Route::post('/management-schedule', [ManagementClassController::class, 'store'])
+        ->name('management-schedule.store');
+    Route::put('/management-schedule/{schedule}', [ManagementClassController::class, 'update'])
+        ->name('management-schedule.update');
+    Route::delete('/management-schedule/{schedule}', [ManagementClassController::class, 'destroy'])
+        ->name('management-schedule.destroy');
 });
 
 Route::middleware('auth')->group(function () {
@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/dashboard', function () {
     // Lab app has no generic dashboard; land logged-in users straight in the lab schedule manager.
-    return redirect()->route('management-class');
+    return redirect()->route('management-schedule');
 })->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {

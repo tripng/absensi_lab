@@ -96,13 +96,13 @@ export default function ScheduleForm({
     }
 
     if (editing) {
-      put(`/management-class/${editing.id}`, {
+      put(`/management-schedule/${editing.id}`, {
         preserveScroll: true,
         onSuccess: () => { reset(); onSuccess?.(); },
         onError: () => {},
       });
     } else {
-      post('/management-class', {
+      post('/management-schedule', {
         preserveScroll: true,
         onSuccess: () => { reset(); onSuccess?.(); },
         onError: () => {},
