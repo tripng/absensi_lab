@@ -64,7 +64,7 @@ it('form config fields have names and each select has exactly one empty placehol
 });
 
 it('form markup wires name, id, and label htmlFor', function () {
-    $source = file_get_contents(resource_path('js/Pages/MasterData/Index.jsx'));
+    $source = file_get_contents(resource_path('js/Components/MasterDataForm.jsx'));
 
     expect($source)
         ->toContain('<label htmlFor={f.name}')
