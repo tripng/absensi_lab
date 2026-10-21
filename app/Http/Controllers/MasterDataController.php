@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Guru;
+use App\Models\Kelas;
 use App\Models\Labkom;
 use App\Models\Mapel;
-use App\Models\Kelas;
 use App\Models\Pengguna;
 use App\Models\RuangAjaran;
 use Illuminate\Http\Request;
@@ -32,7 +31,7 @@ class MasterDataController extends Controller
 {
     /** Entity tabs yang didukung (urutan tab di UI). */
     public const TABS = [
-        'guru'  => 'Guru',
+        'guru' => 'Guru',
         'kelas' => 'Kelas',
         'ruang' => 'Ruangan / Lab',
         'mapel' => 'Mata Pelajaran',
@@ -44,11 +43,11 @@ class MasterDataController extends Controller
     public function index(): Response
     {
         return Inertia::render('MasterData/Index', [
-            'tabs'       => self::TABS,
-            'guruList'   => $this->guruList(),
-            'kelasList'  => $this->kelasList(),
-            'ruangList'  => $this->ruangList(),
-            'mapelList'  => $this->mapelList(),
+            'tabs' => self::TABS,
+            'guruList' => $this->guruList(),
+            'kelasList' => $this->kelasList(),
+            'ruangList' => $this->ruangList(),
+            'mapelList' => $this->mapelList(),
             'formConfig' => $this->formConfig(),
         ]);
     }
@@ -59,7 +58,7 @@ class MasterDataController extends Controller
         $validated = $request->validate($this->rules($entity));
         $this->createRecord($entity, $validated);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity) . ' berhasil ditambahkan.');
+        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil ditambahkan.');
     }
 
     public function update(Request $request, string $entity, $id)
@@ -68,7 +67,7 @@ class MasterDataController extends Controller
         $validated = $request->validate($this->rules($entity, (int) $id));
         $this->updateRecord($entity, $id, $validated);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity) . ' berhasil diperbarui.');
+        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil diperbarui.');
     }
 
     public function destroy(Request $request, string $entity, $id)
@@ -76,7 +75,7 @@ class MasterDataController extends Controller
         $this->ensureEntity($entity);
         $this->deleteRecord($entity, $id);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity) . ' berhasil dihapus.');
+        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil dihapus.');
     }
 
     /** Abort 404 bila entity bukan tab yang didukung. */
@@ -97,10 +96,10 @@ class MasterDataController extends Controller
             ->orderBy('id')
             ->get(['id', 'nip', 'jabatan'])
             ->map(fn (Guru $g) => [
-                'id'        => $g->id,
-                'nama'      => $g->pengguna?->nama ?? '-',
-                'nip'       => $g->nip,
-                'jabatan'   => $g->jabatan,
+                'id' => $g->id,
+                'nama' => $g->pengguna?->nama ?? '-',
+                'nip' => $g->nip,
+                'jabatan' => $g->jabatan,
             ])
             ->values()
             ->all();
@@ -112,10 +111,10 @@ class MasterDataController extends Controller
             ->orderBy('nama_kelas')
             ->get(['id', 'nama_kelas', 'tingkat', 'tahun_ajaran'])
             ->map(fn (Kelas $k) => [
-                'id'             => $k->id,
-                'nama_kelas'     => $k->nama_kelas,
-                'tingkat'        => $k->tingkat,
-                'tahun_ajaran'   => $k->tahun_ajaran,
+                'id' => $k->id,
+                'nama_kelas' => $k->nama_kelas,
+                'tingkat' => $k->tingkat,
+                'tahun_ajaran' => $k->tahun_ajaran,
             ])
             ->values()
             ->all();
@@ -128,10 +127,10 @@ class MasterDataController extends Controller
             ->orderBy('id')
             ->get(['id', 'labkom_id', 'nama_ruangan', 'kapasitas'])
             ->map(fn (RuangAjaran $r) => [
-                'id'           => $r->id,
-                'nama_ruangan' => $r->nama_ruangan ?? 'Ruangan ' . $r->id,
-                'kapasitas'    => $r->kapasitas,
-                'labkom_id'    => $r->labkom_id,
+                'id' => $r->id,
+                'nama_ruangan' => $r->nama_ruangan ?? 'Ruangan '.$r->id,
+                'kapasitas' => $r->kapasitas,
+                'labkom_id' => $r->labkom_id,
                 'labkom_label' => $r->labkom?->lokasi?->nama_lokasi,
             ])
             ->values()
@@ -145,11 +144,11 @@ class MasterDataController extends Controller
             ->orderBy('nama_mapel')
             ->get(['id', 'kode_mapel', 'nama_mapel', 'kelompok', 'guru_id'])
             ->map(fn (Mapel $m) => [
-                'id'        => $m->id,
-                'kode_mapel'=> $m->kode_mapel,
-                'nama_mapel'=> $m->nama_mapel,
-                'kelompok'  => $m->kelompok,
-                'guru_id'   => $m->guru_id,
+                'id' => $m->id,
+                'kode_mapel' => $m->kode_mapel,
+                'nama_mapel' => $m->nama_mapel,
+                'kelompok' => $m->kelompok,
+                'guru_id' => $m->guru_id,
                 'guru_nama' => $m->guru?->pengguna?->nama,
             ])
             ->values()
@@ -163,8 +162,8 @@ class MasterDataController extends Controller
             ->orderBy('id')
             ->get(['id', 'lokasi_id', 'total_komputer'])
             ->map(fn (Labkom $l) => [
-                'id'    => $l->id,
-                'label' => $l->lokasi?->nama_lokasi ?? ('Labkom ' . $l->id),
+                'id' => $l->id,
+                'label' => $l->lokasi?->nama_lokasi ?? ('Labkom '.$l->id),
             ])
             ->values()
             ->all();
@@ -175,13 +174,11 @@ class MasterDataController extends Controller
     // ------------------------------------------------------------------
     protected function formConfig(): array
     {
-        $labkom = $this->labkomList();
-        array_unshift($labkom, ['id' => null, 'label' => '- ruangan manual (tanpa labkom) -']);
-        $labkomOpts = array_map(fn ($l) => ['value' => $l['id'], 'label' => $l['label']], $labkom);
+        $labkomOpts = array_map(fn ($l) => ['value' => $l['id'], 'label' => $l['label']], $this->labkomList());
+        array_unshift($labkomOpts, ['value' => '', 'label' => '- ruangan manual (tanpa labkom) -']);
 
-        $guru = $this->guruList();
-        array_unshift($guru, ['id' => null, 'nama' => '- tidak pilih -']);
-        $guruOpts = array_map(fn ($g) => ['value' => $g['id'], 'label' => $g['nama']], $guru);
+        $guruOpts = array_map(fn ($g) => ['value' => $g['id'], 'label' => $g['nama']], $this->guruList());
+        array_unshift($guruOpts, ['value' => '', 'label' => '- tidak pilih -']);
 
         return [
             'guru' => [
@@ -203,6 +200,7 @@ class MasterDataController extends Controller
                 ['name' => 'kode_mapel',  'label' => 'Kode Mapel',  'type' => 'text',   'required' => true, 'unique' => 'mapel.kode_mapel'],
                 ['name' => 'nama_mapel',  'label' => 'Nama Mapel',  'type' => 'text',   'required' => true],
                 ['name' => 'kelompok',    'label' => 'Kelompok',    'type' => 'select', 'options' => [
+                    ['value' => '',        'label' => '- pilih kelompok -'],
                     ['value' => 'wajib',    'label' => 'Wajib'],
                     ['value' => 'pilihan',  'label' => 'Pilihan'],
                     ['value' => 'praktik',  'label' => 'Praktik'],
@@ -219,25 +217,25 @@ class MasterDataController extends Controller
     {
         return match ($entity) {
             'guru' => [
-                'nama'      => ['required', 'string', 'max:255'],
-                'nip'       => ['required', 'string', 'max:50', Rule::unique('guru', 'nip')->ignore($id)],
-                'jabatan'   => ['nullable', 'string', 'max:255'],
+                'nama' => ['required', 'string', 'max:255'],
+                'nip' => ['required', 'string', 'max:50', Rule::unique('guru', 'nip')->ignore($id)],
+                'jabatan' => ['nullable', 'string', 'max:255'],
             ],
             'kelas' => [
-                'nama_kelas'   => ['required', 'string', 'max:255'],
-                'tingkat'      => ['nullable', 'string', 'max:50'],
+                'nama_kelas' => ['required', 'string', 'max:255'],
+                'tingkat' => ['nullable', 'string', 'max:50'],
                 'tahun_ajaran' => ['nullable', 'string', 'max:50'],
             ],
             'ruang' => [
                 'nama_ruangan' => ['required', 'string', 'max:255'],
-                'kapasitas'    => ['nullable', 'integer', 'min:1'],
-                'labkom_id'    => ['nullable', 'integer', 'exists:labkom,id'],
+                'kapasitas' => ['nullable', 'integer', 'min:1'],
+                'labkom_id' => ['nullable', 'integer', 'exists:labkom,id'],
             ],
             'mapel' => [
                 'kode_mapel' => ['required', 'string', 'max:20', Rule::unique('mapel', 'kode_mapel')->ignore($id)],
                 'nama_mapel' => ['required', 'string', 'max:255'],
-                'kelompok'   => ['nullable', 'in:wajib,pilihan,praktik'],
-                'guru_id'    => ['nullable', 'integer', 'exists:guru,id'],
+                'kelompok' => ['nullable', 'in:wajib,pilihan,praktik'],
+                'guru_id' => ['nullable', 'integer', 'exists:guru,id'],
             ],
             default => [],
         };
@@ -252,31 +250,31 @@ class MasterDataController extends Controller
             match ($entity) {
                 'guru' => (function () use ($v) {
                     $penggunaId = Pengguna::query()->insertGetId([
-                        'tipe'   => 'guru',
-                        'nama'   => $v['nama'],
+                        'tipe' => 'guru',
+                        'nama' => $v['nama'],
                         'status_aktif' => 'aktif',
                     ]);
                     Guru::query()->insert([
-                        'id'      => $penggunaId,
-                        'nip'     => $v['nip'],
+                        'id' => $penggunaId,
+                        'nip' => $v['nip'],
                         'jabatan' => $v['jabatan'] ?? null,
                     ]);
                 })(),
                 'kelas' => Kelas::query()->create([
-                    'nama_kelas'   => $v['nama_kelas'],
-                    'tingkat'      => $v['tingkat'] ?? null,
+                    'nama_kelas' => $v['nama_kelas'],
+                    'tingkat' => $v['tingkat'] ?? null,
                     'tahun_ajaran' => $v['tahun_ajaran'] ?? null,
                 ]),
                 'ruang' => RuangAjaran::query()->create([
-                    'labkom_id'     => empty($v['labkom_id']) ? null : (int) $v['labkom_id'],
-                    'nama_ruangan'  => $v['nama_ruangan'],
-                    'kapasitas'     => empty($v['kapasitas']) ? null : (int) $v['kapasitas'],
+                    'labkom_id' => empty($v['labkom_id']) ? null : (int) $v['labkom_id'],
+                    'nama_ruangan' => $v['nama_ruangan'],
+                    'kapasitas' => empty($v['kapasitas']) ? null : (int) $v['kapasitas'],
                 ]),
                 'mapel' => Mapel::query()->create([
                     'kode_mapel' => $v['kode_mapel'],
                     'nama_mapel' => $v['nama_mapel'],
-                    'kelompok'   => in_array($v['kelompok'] ?? null, ['wajib', 'pilihan', 'praktik']) ? $v['kelompok'] : 'wajib',
-                    'guru_id'    => empty($v['guru_id']) ? null : (int) $v['guru_id'],
+                    'kelompok' => in_array($v['kelompok'] ?? null, ['wajib', 'pilihan', 'praktik']) ? $v['kelompok'] : 'wajib',
+                    'guru_id' => empty($v['guru_id']) ? null : (int) $v['guru_id'],
                 ]),
             };
         });
@@ -289,25 +287,25 @@ class MasterDataController extends Controller
                 'guru' => (function () use ($id, $v) {
                     DB::table('pengguna')->where('id', $id)->update(['nama' => $v['nama']]);
                     Guru::query()->where('id', $id)->update([
-                        'nip'     => $v['nip'],
+                        'nip' => $v['nip'],
                         'jabatan' => $v['jabatan'] ?? null,
                     ]);
                 })(),
                 'kelas' => Kelas::query()->where('id', $id)->update([
-                    'nama_kelas'   => $v['nama_kelas'],
-                    'tingkat'      => $v['tingkat'] ?? null,
+                    'nama_kelas' => $v['nama_kelas'],
+                    'tingkat' => $v['tingkat'] ?? null,
                     'tahun_ajaran' => $v['tahun_ajaran'] ?? null,
                 ]),
                 'ruang' => RuangAjaran::query()->where('id', $id)->update([
-                    'labkom_id'     => empty($v['labkom_id']) ? null : (int) $v['labkom_id'],
-                    'nama_ruangan'  => $v['nama_ruangan'],
-                    'kapasitas'     => empty($v['kapasitas']) ? null : (int) $v['kapasitas'],
+                    'labkom_id' => empty($v['labkom_id']) ? null : (int) $v['labkom_id'],
+                    'nama_ruangan' => $v['nama_ruangan'],
+                    'kapasitas' => empty($v['kapasitas']) ? null : (int) $v['kapasitas'],
                 ]),
                 'mapel' => Mapel::query()->where('id', $id)->update([
                     'kode_mapel' => $v['kode_mapel'],
                     'nama_mapel' => $v['nama_mapel'],
-                    'kelompok'   => in_array($v['kelompok'] ?? null, ['wajib', 'pilihan', 'praktik']) ? $v['kelompok'] : 'wajib',
-                    'guru_id'    => empty($v['guru_id']) ? null : (int) $v['guru_id'],
+                    'kelompok' => in_array($v['kelompok'] ?? null, ['wajib', 'pilihan', 'praktik']) ? $v['kelompok'] : 'wajib',
+                    'guru_id' => empty($v['guru_id']) ? null : (int) $v['guru_id'],
                 ]),
             };
         });

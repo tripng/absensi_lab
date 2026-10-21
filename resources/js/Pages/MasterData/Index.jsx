@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, router } from '@inertiajs/react';
+import { useForm, router, usePage } from '@inertiajs/react';
 import Navbar from '../Absensi/Navbar';
 import Topbar from '../Absensi/Topbar';
 import Mso from '../Absensi/Mso';
@@ -18,8 +18,6 @@ import Modal from '@/Components/Modal';
  *
  * Nama field di form pakai snake_case agar langsung match validation backend.
  */
-const emptyOption = { value: '', label: '— tidak pilih —' };
-
 // Kolom tabel per entity (key harus match field name atau label yang ada di list props).
 const columnsFor = {
   guru: [
@@ -56,6 +54,7 @@ export default function MasterDataIndex({
   const lists = { guru: guruList, kelas: kelasList, ruang: ruangList, mapel: mapelList };
   const current = lists[activeTab] ?? [];
   const fields = formConfig[activeTab] ?? [];
+  const success = usePage().props.success;
 
   const openCreate = () => {
     setEditing(null);
@@ -121,6 +120,17 @@ export default function MasterDataIndex({
               </button>
             </div>
 
+            {/* Success flash */}
+            {success && (
+              <div
+                role="status"
+                className="mb-space-md flex items-center gap-space-xs px-space-md py-space-sm bg-tertiary-fixed text-on-tertiary-fixed-variant border border-tertiary/20 rounded-xl font-body-md"
+              >
+                <Mso name="check_circle" size={18} />
+                <span>{success}</span>
+              </div>
+            )}
+
             {/* Table */}
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
               {current.length === 0 ? (
@@ -165,7 +175,10 @@ export default function MasterDataIndex({
                               if (confirm(`Hapus ${tabs[activeTab]} ini?`)) {
                                 router.delete(`/master-data/${activeTab}/${row.id}`, {
                                   preserveScroll: true,
-                                  onError: () => {},
+                                  onError: (errors) => {
+                                    const message = Object.values(errors ?? {}).join('\n');
+                                    alert(message || 'Gagal menghapus data.');
+                                  },
                                 });
                               }
                             }}
@@ -252,23 +265,26 @@ function MasterDataForm({ activeTab, fields, editing, onSuccess }) {
     <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
       {fields.map((f) => (
         <div key={f.name} className="flex flex-col gap-space-xs">
-          <label className="font-label-sm text-on-surface-variant mb-space-xs block">
+          <label htmlFor={f.name} className="font-label-sm text-on-surface-variant mb-space-xs block">
             {f.label}
             {f.required ? ' *' : ''}
           </label>
           {f.type === 'select' ? (
             <select
+              id={f.name}
+              name={f.name}
               value={form.data[f.name] ?? ''}
               onChange={(e) => form.setData(f.name, e.target.value)}
               className="w-full px-space-sm py-space-xs border border-outline-variant rounded-xl bg-surface-container-high text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
             >
-              <option value="">{emptyOption.label}</option>
               {f.options?.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
           ) : (
             <input
+              id={f.name}
+              name={f.name}
               type={f.type === 'number' ? 'number' : 'text'}
               value={form.data[f.name] ?? ''}
               onChange={(e) => form.setData(f.name, e.target.value)}
