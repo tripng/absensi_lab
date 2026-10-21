@@ -197,7 +197,7 @@ class MasterDataController extends Controller
         return [
             'guru' => [
                 ['name' => 'nama',      'label' => 'Nama Lengkap', 'type' => 'text',   'required' => true],
-                ['name' => 'nip',       'label' => 'NIP',          'type' => 'text',   'required' => true, 'unique' => 'guru.nip'],
+                ['name' => 'nip',       'label' => 'NIP',          'type' => 'text',   'required' => false, 'unique' => 'guru.nip'],
                 ['name' => 'jabatan',   'label' => 'Jabatan',      'type' => 'text'],
             ],
             'kelas' => [
@@ -232,7 +232,7 @@ class MasterDataController extends Controller
         return match ($entity) {
             'guru' => [
                 'nama' => ['required', 'string', 'max:255'],
-                'nip' => ['required', 'string', 'max:50', Rule::unique('guru', 'nip')->ignore($id)],
+                'nip' => ['nullable', 'string', 'max:50', Rule::unique('guru', 'nip')->ignore($id)],
                 'jabatan' => ['nullable', 'string', 'max:255'],
             ],
             'kelas' => [
@@ -270,7 +270,7 @@ class MasterDataController extends Controller
                     ]);
                     Guru::query()->insert([
                         'id' => $penggunaId,
-                        'nip' => $v['nip'],
+                        'nip' => $v['nip'] ?? '',
                         'jabatan' => $v['jabatan'] ?? null,
                     ]);
                 })(),
@@ -301,7 +301,7 @@ class MasterDataController extends Controller
                 'guru' => (function () use ($id, $v) {
                     DB::table('pengguna')->where('id', $id)->update(['nama' => $v['nama']]);
                     Guru::query()->where('id', $id)->update([
-                        'nip' => $v['nip'],
+                        'nip' => $v['nip'] ?? '',
                         'jabatan' => $v['jabatan'] ?? null,
                     ]);
                 })(),
