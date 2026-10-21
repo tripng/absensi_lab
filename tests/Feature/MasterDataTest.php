@@ -124,6 +124,42 @@ it('stores a guru (persists into pengguna + guru via shared PK)', function () {
     $this->assertDatabaseHas('guru', ['id' => $penggunaId, 'nip' => '199901012010011006', 'jabatan' => 'Guru Tes']);
 });
 
+it('stores a guru with an empty NIP', function () {
+    $admin = makeMasterAdmin();
+
+    $this->actingAs($admin)
+        ->post('/master-data/guru', [
+            'nama' => 'Guru Tanpa NIP',
+            'nip' => '',
+            'jabatan' => 'Guru Honorer',
+        ])
+        ->assertRedirect('/master-data/guru')
+        ->assertSessionHas('success', 'Guru berhasil ditambahkan.');
+
+    $penggunaId = DB::table('pengguna')->where('nama', 'Guru Tanpa NIP')->value('id');
+    $this->assertNotNull($penggunaId);
+    $this->assertDatabaseHas('guru', ['id' => $penggunaId, 'nip' => '']);
+});
+
+it('filters guru list by nama or nip via search query', function () {
+    $admin = makeMasterAdmin();
+
+    $this->actingAs($admin)
+        ->get('/master-data/guru?search=budi')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('guruList', 1)
+            ->where('guruList.0.nama', 'Budi Santoso, S.Pd.')
+            ->where('search', 'budi'));
+
+    $this->actingAs($admin)
+        ->get('/master-data/guru?search=19850303')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('guruList', 1)
+            ->where('guruList.0.nip', '198503032007033003'));
+});
+
 it('rejects storing guru with a duplicate NIP', function () {
     $admin = makeMasterAdmin();
     $seededNip = DB::table('guru')->value('nip');
