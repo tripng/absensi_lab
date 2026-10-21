@@ -22,14 +22,14 @@ function makeAdmin()
     ]);
 }
 
-it('requires authentication to view management-class', function () {
-    $this->get('/management-class')->assertRedirect('/login');
+it('requires authentication to view management-schedule', function () {
+    $this->get('/management-schedule')->assertRedirect('/login');
 });
 
 it('authenticated index emits real master props from DB', function () {
     $admin = makeAdmin();
     $this->actingAs($admin)
-        ->get('/management-class')
+        ->get('/management-schedule')
         ->assertOk()
         ->assertInertia(function ($page) {
             $page->has('kelasList', 15)
@@ -45,7 +45,7 @@ it('authenticated index emits real master props from DB', function () {
 it('cannot store recurring without required FK (kelas_id, ruang_ajaran_id)', function () {
     $admin = makeAdmin();
     $this->actingAs($admin)
-        ->post('/management-class', [
+        ->post('/management-schedule', [
             'type' => 'recurring',
             'hari' => 'senin',
             'jam_mulai' => '08:00',
@@ -61,7 +61,7 @@ it('store recurring persists to jadwal_ajaran', function () {
     $ruangId = RuangAjaran::query()->first()->id;
 
     $this->actingAs($admin)
-        ->post('/management-class', [
+        ->post('/management-schedule', [
             'type' => 'recurring',
             'kelas_id' => $kelasId,
             'guru_id' => $guruId,
@@ -74,7 +74,7 @@ it('store recurring persists to jadwal_ajaran', function () {
             'no_telepon' => '081234567890',
             'keterangan' => 'E2E recurring',
         ])
-        ->assertRedirect('/management-class');
+        ->assertRedirect('/management-schedule');
 
     $this->assertDatabaseHas('jadwal_ajaran', [
         'kelas_id' => $kelasId,
@@ -92,7 +92,7 @@ it('store one-time persists to jadwal_pinjaman with peminjam = logged user', fun
     $mapelId = Mapel::query()->first()->id;
 
     $this->actingAs($admin)
-        ->post('/management-class', [
+        ->post('/management-schedule', [
             'type' => 'one-time',
             'kelas_id' => $kelasId,
             'ruang_ajaran_id' => $ruangId,
@@ -103,7 +103,7 @@ it('store one-time persists to jadwal_pinjaman with peminjam = logged user', fun
             'no_telepon' => '081987654321',
             'keterangan' => 'E2E pinjaman',
         ])
-        ->assertRedirect('/management-class');
+        ->assertRedirect('/management-schedule');
 
     $this->assertDatabaseHas('jadwal_pinjaman', [
         'peminjam_user_id' => $admin->id,
@@ -128,8 +128,8 @@ it('deletes recurring and one-time schedules', function () {
         'hari' => 'senin', 'jam_mulai' => '08:00', 'jam_selesai' => '09:00',
         'kelas_id' => $kelasId,
     ]);
-    $this->delete('/management-class/'.$rec->id.'?type=recurring')
-        ->assertRedirect('/management-class');
+    $this->delete('/management-schedule/'.$rec->id.'?type=recurring')
+        ->assertRedirect('/management-schedule');
     $this->assertDatabaseMissing('jadwal_ajaran', ['id' => $rec->id]);
 
     $pin = JadwalPinjaman::create([
@@ -141,8 +141,8 @@ it('deletes recurring and one-time schedules', function () {
         'jam_mulai' => '09:00:00',
         'jam_selesai' => '10:00:00',
     ]);
-    $this->delete('/management-class/'.$pin->id.'?type=one-time')
-        ->assertRedirect('/management-class');
+    $this->delete('/management-schedule/'.$pin->id.'?type=one-time')
+        ->assertRedirect('/management-schedule');
     $this->assertDatabaseMissing('jadwal_pinjaman', ['id' => $pin->id]);
 });
 
@@ -167,7 +167,7 @@ it('index emits raw FK ids and mapelList so edit prefill is by-ID', function () 
     ]);
 
     $this->actingAs($admin)
-        ->get('/management-class')
+        ->get('/management-schedule')
         ->assertOk()
         ->assertInertia(function ($page) use ($kelasId, $ruangId, $guruId, $mapelId) {
             $page->has('mapelList')
@@ -204,7 +204,7 @@ it('edits a recurring schedule end-to-end (PUT updates DB + round-trip shows new
     ]);
 
     $this->actingAs($admin)
-        ->put('/management-class/'.$rec, [
+        ->put('/management-schedule/'.$rec, [
             'type' => 'recurring',
             'kelas_id' => $kelasId,
             'guru_id' => $guruId,
@@ -217,7 +217,7 @@ it('edits a recurring schedule end-to-end (PUT updates DB + round-trip shows new
             'no_telepon' => '08111111111',
             'keterangan' => 'updated via PUT',
         ])
-        ->assertRedirect('/management-class');
+        ->assertRedirect('/management-schedule');
 
     $this->assertDatabaseHas('jadwal_ajaran', [
         'id' => $rec,
@@ -230,7 +230,7 @@ it('edits a recurring schedule end-to-end (PUT updates DB + round-trip shows new
 
     // Round-trip: index must surface the updated recurring entry.
     $this->actingAs($admin)
-        ->get('/management-class')
+        ->get('/management-schedule')
         ->assertInertia(fn ($page) => $page->has('recurring', 1));
 });
 
@@ -251,7 +251,7 @@ it('edits a one-time schedule end-to-end (PUT updates DB)', function () {
     ]);
 
     $this->actingAs($admin)
-        ->put('/management-class/'.$pin, [
+        ->put('/management-schedule/'.$pin, [
             'type' => 'one-time',
             'kelas_id' => $kelasId,
             'ruang_ajaran_id' => $ruangId,
@@ -262,7 +262,7 @@ it('edits a one-time schedule end-to-end (PUT updates DB)', function () {
             'no_telepon' => '08222222222',
             'keterangan' => 'updated via PUT one-time',
         ])
-        ->assertRedirect('/management-class');
+        ->assertRedirect('/management-schedule');
 
     $this->assertDatabaseHas('jadwal_pinjaman', [
         'id' => $pin,
@@ -292,8 +292,8 @@ it('deletes one-time via request body type (as Inertia UI sends)', function () {
 
     // type dikirim lewat BODY (bukan query) — mereka ini bug sebelumnya.
     $this->actingAs($admin)
-        ->delete('/management-class/'.$pin, ['type' => 'one-time'])
-        ->assertRedirect('/management-class');
+        ->delete('/management-schedule/'.$pin, ['type' => 'one-time'])
+        ->assertRedirect('/management-schedule');
 
     $this->assertDatabaseMissing('jadwal_pinjaman', ['id' => $pin]);
 });
@@ -306,7 +306,7 @@ it('rejects recurring save when time conflicts on same ruangan/kelas', function 
 
     // Jadwal pertama: 10:00–11:30
     $this->actingAs($admin)
-        ->post('/management-class', [
+        ->post('/management-schedule', [
             'type' => 'recurring',
             'kelas_id' => $kelasId,
             'guru_id' => $guruId,
@@ -317,12 +317,12 @@ it('rejects recurring save when time conflicts on same ruangan/kelas', function 
             'keterangan' => 'initial',
             'no_telepon' => '08100000000',
         ])
-        ->assertRedirect('/management-class');
+        ->assertRedirect('/management-schedule');
     $this->assertDatabaseHas('jadwal_ajaran', ['keterangan' => 'initial']);
 
     // Jadwal kedua: 10:30–12:00 → tumpang tindih di ruangan/kelas yang sama.
     $this->actingAs($admin)
-        ->post('/management-class', [
+        ->post('/management-schedule', [
             'type' => 'recurring',
             'kelas_id' => $kelasId,
             'guru_id' => $guruId,
@@ -345,7 +345,7 @@ it('rejects one-time save when time conflicts on same ruangan/kelas', function (
     $mapelId = Mapel::query()->value('id');
 
     $this->actingAs($admin)
-        ->post('/management-class', [
+        ->post('/management-schedule', [
             'type' => 'one-time',
             'kelas_id' => $kelasId,
             'ruang_ajaran_id' => $ruangId,
@@ -355,11 +355,11 @@ it('rejects one-time save when time conflicts on same ruangan/kelas', function (
             'keterangan' => 'initial',
             'no_telepon' => '08100000000',
         ])
-        ->assertRedirect('/management-class');
+        ->assertRedirect('/management-schedule');
 
     // 09:30–10:30 bentrok dengan 09:00–10:00 pada ruangan yang sama.
     $this->actingAs($admin)
-        ->post('/management-class', [
+        ->post('/management-schedule', [
             'type' => 'one-time',
             'kelas_id' => $kelasId,
             'ruang_ajaran_id' => $ruangId,
@@ -386,7 +386,7 @@ it('edit (PUT) does not flag a conflict with itself', function () {
     ]);
 
     $this->actingAs($admin)
-        ->put('/management-class/'.$rec, [
+        ->put('/management-schedule/'.$rec, [
             'type' => 'recurring',
             'kelas_id' => $kelasId,
             'guru_id' => $guruId,
@@ -397,7 +397,7 @@ it('edit (PUT) does not flag a conflict with itself', function () {
             'keterangan' => 'self edit ok',
             'no_telepon' => '08100000000',
         ])
-        ->assertRedirect('/management-class');
+        ->assertRedirect('/management-schedule');
 
     $this->assertDatabaseHas('jadwal_ajaran', ['id' => $rec, 'keterangan' => 'self edit ok']);
 });
