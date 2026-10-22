@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\File;
 use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class CreateApiToken extends Command
 {
     protected $signature = 'api:token {name : Token name} {--user-email= : User email to attach token to} {--save-to-env= : Env key name to save token (e.g. SCAN_APP_TOKEN)}';
+
     protected $description = 'Create a Sanctum API token for external apps. Optionally save to .env.';
 
     public function handle()
@@ -18,7 +19,7 @@ class CreateApiToken extends Command
 
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             $this->info("No user found with email {$email}. Creating one...");
             $user = User::create([
                 'name' => 'Admin Absensi',
@@ -35,7 +36,7 @@ class CreateApiToken extends Command
 
         $this->info("API Token for user {$user->email}:");
         $this->line($plainToken);
-        $this->info("Use as: Authorization: Bearer ***");
+        $this->info('Use as: Authorization: Bearer ***');
 
         // Optionally save to .env
         $envKey = $this->option('save-to-env');
@@ -48,13 +49,13 @@ class CreateApiToken extends Command
     {
         $envPath = base_path('.env');
         $content = File::get($envPath);
-        $pattern = "/^" . preg_quote($key, '/') . "=(.*)$/m";
-        $replacement = $key . "=\"" . $token . "\"";
+        $pattern = '/^'.preg_quote($key, '/').'=(.*)$/m';
+        $replacement = $key.'="'.$token.'"';
 
         if (preg_match($pattern, $content)) {
             $content = preg_replace($pattern, $replacement, $content);
         } else {
-            $content .= "\n" . $replacement . "\n";
+            $content .= "\n".$replacement."\n";
         }
 
         File::put($envPath, $content);

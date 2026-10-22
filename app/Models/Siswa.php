@@ -12,8 +12,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Siswa extends Model
 {
     protected $table = 'siswa';
+
     public $timestamps = false;
+
     public $incrementing = false;
+
     protected $keyType = 'int';
 
     protected $fillable = [

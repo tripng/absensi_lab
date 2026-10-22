@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class JadwalAjaran extends Model
 {
     protected $table = 'jadwal_ajaran';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -25,8 +26,8 @@ class JadwalAjaran extends Model
     ];
 
     protected $casts = [
-        'jam_mulai'    => 'datetime:H:i',
-        'jam_selesai'  => 'datetime:H:i',
+        'jam_mulai' => 'datetime:H:i',
+        'jam_selesai' => 'datetime:H:i',
         'jumlah_siswa' => 'integer',
     ];
 

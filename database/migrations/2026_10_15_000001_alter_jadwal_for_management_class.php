@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * DB changes untuk /management-class — issue #3.
@@ -56,8 +56,8 @@ return new class extends Migration
 
         // Constraint rentan waktu valid (jam_mulai < jam_selesai)
         DB::statement(
-            "ALTER TABLE jadwal_ajaran ADD CONSTRAINT jadwal_ajaran_jam_valid "
-            . "CHECK (jam_mulai < jam_selesai)"
+            'ALTER TABLE jadwal_ajaran ADD CONSTRAINT jadwal_ajaran_jam_valid '
+            .'CHECK (jam_mulai < jam_selesai)'
         );
 
         // ----------------------------------------------------------------

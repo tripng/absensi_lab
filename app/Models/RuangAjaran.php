@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class RuangAjaran extends Model
 {
     protected $table = 'ruang_ajaran';
+
     public $timestamps = true;
 
     protected $fillable = [

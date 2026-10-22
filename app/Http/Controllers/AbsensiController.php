@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
@@ -40,25 +40,26 @@ class AbsensiController extends Controller
 
         // Pick the lookup key: nisn for siswa, nip for guru/tamu.
         $id = null;
-        if (!empty($row->nisn)) {
+        if (! empty($row->nisn)) {
             $id = $row->nisn;
-        } elseif (!empty($row->nip)) {
+        } elseif (! empty($row->nip)) {
             $id = $row->nip;
         }
 
         if ($id) {
-            $file = $this->photoDir() . '/' . $id . '.jpg';
+            $file = $this->photoDir().'/'.$id.'.jpg';
             if (File::exists($file)) {
                 // Serve through the public/ symlink so the PHP built-in
                 // server (and any web server) can reach resources/img/photos/.
-                return asset('img/photos/' . $id . '.jpg');
+                return asset('img/photos/'.$id.'.jpg');
             }
         }
 
         // Final fallback — generated avatar from the person's name.
         $name = $row->nama ?? 'U';
+
         return 'https://ui-avatars.com/api/?background=4f46e5&color=fff&name='
-            . urlencode($name);
+            .urlencode($name);
     }
 
     /**
@@ -104,14 +105,14 @@ class AbsensiController extends Controller
         // Normalise each row into the shape DetailPanel expects.
         return $rows->map(function ($row) {
             $ts = $row->waktu_scan ? (int) $row->waktu_scan : null;
-            $moment = $ts ? \Carbon\Carbon::createFromTimestamp($ts, 'Asia/Jakarta') : null;
+            $moment = $ts ? Carbon::createFromTimestamp($ts, 'Asia/Jakarta') : null;
 
             // jenis: masuk => Hadir (present), keluar => Keluar (absent)
             $isMasuk = ($row->jenis ?? '') === 'masuk';
 
             // empId: nisn for siswa, nip for tamu (keeps the card "no." meaningful)
             $empId = $row->nisn ?? '';
-            if ($empId === '' && !empty($row->nip)) {
+            if ($empId === '' && ! empty($row->nip)) {
                 $empId = $row->nip;
             }
 
@@ -124,22 +125,22 @@ class AbsensiController extends Controller
             }
 
             return [
-                'name'        => $row->nama ?? 'Tanpa Nama',
-                'empId'       => $empId,
-                'role'        => $role,
-                'status'      => $isMasuk ? 'present' : 'absent',
+                'name' => $row->nama ?? 'Tanpa Nama',
+                'empId' => $empId,
+                'role' => $role,
+                'status' => $isMasuk ? 'present' : 'absent',
                 'statusLabel' => $isMasuk ? 'MASUK' : 'KELUAR',
-                'statusPill'  => $isMasuk
+                'statusPill' => $isMasuk
                     ? 'bg-primary text-on-primary'
                     : 'bg-error text-on-error',
-                'iconColor'   => $isMasuk
+                'iconColor' => $isMasuk
                     ? 'text-primary'
                     : 'text-error',
-                'note'        => $moment
-                    ? $moment->format('H:i, ') . $moment->translatedFormat('l, d M Y')
+                'note' => $moment
+                    ? $moment->format('H:i, ').$moment->translatedFormat('l, d M Y')
                     : '-',
-                'photo'       => $this->resolvePhoto($row),
-                'alt'         => $row->nama ?? 'Foto pengguna',
+                'photo' => $this->resolvePhoto($row),
+                'alt' => $row->nama ?? 'Foto pengguna',
             ];
         })->values()->all();
     }
@@ -177,14 +178,15 @@ class AbsensiController extends Controller
         // 6. Log akses per tanggal — dari kolom waktu_scan (unix-epoch sebagai
         //    text), kelompokkan per hari, hitung jumlah masuk & keluar.
         $logAkses = $db->table('log_akses')
-            ->selectRaw("FROM_UNIXTIME(CAST(waktu_scan AS UNSIGNED)) AS ts, jenis")
+            ->selectRaw('FROM_UNIXTIME(CAST(waktu_scan AS UNSIGNED)) AS ts, jenis')
             ->whereNotNull('waktu_scan')
             ->where('waktu_scan', 'REGEXP', '^[0-9]+$')
             ->get()
             ->map(function ($row) {
                 $date = $row->ts ? date('Y-m-d', (int) strtotime($row->ts)) : null;
+
                 return [
-                    'date'  => $date,
+                    'date' => $date,
                     'jenis' => $row->jenis,
                 ];
             })
@@ -192,10 +194,11 @@ class AbsensiController extends Controller
             ->map(function ($group) {
                 $masuk = $group->where('jenis', 'masuk')->count();
                 $keluar = $group->where('jenis', 'keluar')->count();
+
                 return [
-                    'date'  => $group->first()['date'],
+                    'date' => $group->first()['date'],
                     'masuk' => (int) $masuk,
-                    'keluar'=> (int) $keluar,
+                    'keluar' => (int) $keluar,
                 ];
             })
             ->values()
@@ -205,18 +208,18 @@ class AbsensiController extends Controller
         //    Default filter is siswa; tamu is the alternate tab.
         $lastScans = [
             'siswa' => $this->lastScansByType('siswa', 5),
-            'tamu'  => $this->lastScansByType('guru', 5),
+            'tamu' => $this->lastScansByType('guru', 5),
         ];
 
         return Inertia::render('Absensi/Index', [
-            'stats'      => [
-                'total_absensi'     => $totalAbsensi,
-                'total_masuk'       => $totalMasuk,
-                'total_keluar'      => $totalKeluar,
+            'stats' => [
+                'total_absensi' => $totalAbsensi,
+                'total_masuk' => $totalMasuk,
+                'total_keluar' => $totalKeluar,
                 'total_kartu_siswa' => $totalKartuSiswa,
-                'total_kartu_tamu'  => $totalKartuTamu,
+                'total_kartu_tamu' => $totalKartuTamu,
             ],
-            'logAkses'  => $logAkses,
+            'logAkses' => $logAkses,
             'lastScans' => $lastScans,
         ]);
     }

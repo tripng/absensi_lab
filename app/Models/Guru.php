@@ -13,8 +13,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Guru extends Model
 {
     protected $table = 'guru';
+
     public $timestamps = false;
+
     public $incrementing = false;
+
     protected $keyType = 'int';
 
     protected $fillable = [

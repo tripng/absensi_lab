@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * Seed data master agar `migrate:fresh --seed` menghasilkan state siap pakai
@@ -29,9 +30,9 @@ class MasterTablesSeeder extends Seeder
         $kelas = [];
         foreach (range(1, 15) as $i) {
             $kelas[] = [
-                'nama_kelas'    => "X.{$i}",
-                'tingkat'       => 'X',
-                'tahun_ajaran'  => '2026/2027',
+                'nama_kelas' => "X.{$i}",
+                'tingkat' => 'X',
+                'tahun_ajaran' => '2026/2027',
             ];
         }
         DB::table('kelas')->insert($kelas);
@@ -46,30 +47,30 @@ class MasterTablesSeeder extends Seeder
         ];
         foreach ($gurus as $g) {
             $penggunaId = DB::table('pengguna')->insertGetId([
-                'tipe'   => 'guru',
-                'nama'   => $g['nama'],
+                'tipe' => 'guru',
+                'nama' => $g['nama'],
                 'status_aktif' => 'aktif',
             ]);
             DB::table('guru')->insert([
-                'id'      => $penggunaId,
-                'nip'     => $g['nip'],
+                'id' => $penggunaId,
+                'nip' => $g['nip'],
                 'jabatan' => $g['jabatan'],
             ]);
         }
 
         // --- labkom + ruang_ajaran ---
         DB::table('labkom')->insert([
-            'lokasi_id'      => $labkomLokasiId,
+            'lokasi_id' => $labkomLokasiId,
             'total_komputer' => 32,
-            'jumlah_baris'   => 8,
-            'jumlah_kolom'   => 4,
+            'jumlah_baris' => 8,
+            'jumlah_kolom' => 4,
         ]);
         $labkomId = DB::table('labkom')->where('lokasi_id', $labkomLokasiId)->value('id');
 
         DB::table('ruang_ajaran')->insert([
-            'labkom_id'         => $labkomId,
-            'nama_ruangan'      => 'Labkom 1',
-            'kapasitas'         => 32,
+            'labkom_id' => $labkomId,
+            'nama_ruangan' => 'Labkom 1',
+            'kapasitas' => 32,
         ]);
 
         // --- mapel (guru_id FK ke guru.id / pengguna.id) ---
@@ -86,19 +87,19 @@ class MasterTablesSeeder extends Seeder
             $ins[] = [
                 'kode_mapel' => $m['kode'],
                 'nama_mapel' => $m['nama'],
-                'kelompok'   => $m['kelompok'],
-                'guru_id'    => $guruIds[$m['nip']] ?? null,
+                'kelompok' => $m['kelompok'],
+                'guru_id' => $guruIds[$m['nip']] ?? null,
             ];
         }
         DB::table('mapel')->insert($ins);
 
         // --- admin user (biar /management-class dapat auth login) ---
         DB::table('users')->insert([
-            'name'                  => 'Admin Absensi',
-            'email'                 => 'admin@absensi.com',
-            'email_verified_at'     => now(),
-            'password'              => Hash::make('password'),
-            'remember_token'        => \Illuminate\Support\Str::random(10),
+            'name' => 'Admin Absensi',
+            'email' => 'admin@absensi.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
         ]);
     }
-};
+}
