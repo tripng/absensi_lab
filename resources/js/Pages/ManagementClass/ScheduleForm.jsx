@@ -96,13 +96,13 @@ export default function ScheduleForm({
     }
 
     if (editing) {
-      put(`/management-class/${editing.id}`, {
+      put(`/management-schedule/${editing.id}`, {
         preserveScroll: true,
         onSuccess: () => { reset(); onSuccess?.(); },
         onError: () => {},
       });
     } else {
-      post('/management-class', {
+      post('/management-schedule', {
         preserveScroll: true,
         onSuccess: () => { reset(); onSuccess?.(); },
         onError: () => {},
@@ -356,25 +356,25 @@ export default function ScheduleForm({
             )}
           </div>
         </div>
-      </form>
 
-      {/* Form actions */}
-      <div className="flex justify-end gap-space-sm mt-space-md pt-space-md border-t border-outline-variant">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-space-md py-space-sm bg-surface-container-high text-on-surface-variant rounded-xl font-label-md font-medium hover:bg-surface-container transition-colors"
-        >
-          Batal
-        </button>
-        <button
-          type="submit"
-          disabled={processing}
-          className="px-space-md py-space-sm bg-primary text-on-primary rounded-xl font-label-md font-medium hover:bg-primary/90 transition-colors flex items-center gap-space-xs disabled:opacity-60"
-        >
-          <Mso name="save" /> Simpan
-        </button>
-      </div>
+        {/* Form actions */}
+        <div className="flex justify-end gap-space-sm mt-space-md pt-space-md border-t border-outline-variant">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-space-md py-space-sm bg-surface-container-high text-on-surface-variant rounded-xl font-label-md font-medium hover:bg-surface-container transition-colors"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            disabled={processing}
+            className="px-space-md py-space-sm bg-primary text-on-primary rounded-xl font-label-md font-medium hover:bg-primary/90 transition-colors flex items-center gap-space-xs disabled:opacity-60"
+          >
+            <Mso name="save" /> Simpan
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

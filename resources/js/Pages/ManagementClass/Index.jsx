@@ -54,7 +54,7 @@ export default function ManagementClassIndex({
 
   // POST → 302 redirect ke index; Inertia ikut & server kirim props terbaru.
   const handleAdd = (formData) => {
-    router.post('/management-class', formData, {
+    router.post('/management-schedule', formData, {
       preserveScroll: true,
       onSuccess: () => setShowForm(false),
     });
@@ -67,7 +67,7 @@ export default function ManagementClassIndex({
 
   const handleDelete = (schedule) => {
     if (!confirm('Hapus jadwal ini?')) return;
-    router.delete(`/management-class/${schedule.id}`, {
+    router.delete(`/management-schedule/${schedule.id}`, {
       data: { type: schedule.type },
       preserveScroll: true,
     });

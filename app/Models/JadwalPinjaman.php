@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class JadwalPinjaman extends Model
 {
     protected $table = 'jadwal_pinjaman';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -26,9 +26,9 @@ class JadwalPinjaman extends Model
     ];
 
     protected $casts = [
-        'tanggal'      => 'date',
-        'jam_mulai'    => 'datetime:H:i',
-        'jam_selesai'  => 'datetime:H:i',
+        'tanggal' => 'date',
+        'jam_mulai' => 'datetime:H:i',
+        'jam_selesai' => 'datetime:H:i',
         'jumlah_siswa' => 'integer',
     ];
 

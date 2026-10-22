@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Master tables untuk absensi_lab.
@@ -148,7 +148,7 @@ return new class extends Migration
         });
 
         // 9. v_scan_lookup — view lookup (read-only, dipakai eksternal)
-        DB::statement("CREATE VIEW v_scan_lookup AS
+        DB::statement('CREATE VIEW v_scan_lookup AS
             SELECT
                 p.id AS pengguna_id,
                 p.tipe,
@@ -168,7 +168,7 @@ return new class extends Migration
             LEFT JOIN rfid_card r ON r.pengguna_id = p.id
             LEFT JOIN siswa s ON s.id = p.id
             LEFT JOIN kelas k ON k.id = s.kelas_id
-            LEFT JOIN guru g ON g.id = p.id");
+            LEFT JOIN guru g ON g.id = p.id');
     }
 
     public function down(): void

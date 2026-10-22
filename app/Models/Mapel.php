@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Mapel extends Model
 {
     protected $table = 'mapel';
+
     public $timestamps = true;
 
     protected $fillable = [

@@ -4,7 +4,7 @@ import { Link, usePage } from '@inertiajs/react';
 const navItems = [
   { label: 'Absensi', icon: 'calendar_today', href: '/absensi' },
   { label: 'Data', icon: 'dataset', href: '/data' },
-  { label: 'Management Class', icon: 'edit_calendar', href: '/management-class' },
+  { label: 'Management Schedule', icon: 'edit_calendar', href: '/management-schedule' },
   { label: 'Master Data', icon: 'admin_panel_settings', href: '/master-data' },
 ];
 

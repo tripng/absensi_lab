@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class DataController extends Controller
 {
@@ -20,12 +25,12 @@ class DataController extends Controller
         $db = DB::connection('mysql');
 
         $startDate = $request->query('start_date');
-        $endDate   = $request->query('end_date');
-        $kelas     = $request->query('kelas');
+        $endDate = $request->query('end_date');
+        $kelas = $request->query('kelas');
 
         // Validasi format tanggal sederhana (YYYY-MM-DD).
         $startTs = null;
-        $endTs   = null;
+        $endTs = null;
         if ($startDate) {
             $d = \DateTime::createFromFormat('Y-m-d', $startDate);
             if ($d && $d->format('Y-m-d') === $startDate) {
@@ -82,8 +87,8 @@ class DataController extends Controller
             ->all();
 
         $perPage = 25;
-        $page    = max(1, (int) $request->query('page', 1));
-        $offset  = ($page - 1) * $perPage;
+        $page = max(1, (int) $request->query('page', 1));
+        $offset = ($page - 1) * $perPage;
 
         $total = $query->count();
 
@@ -94,16 +99,16 @@ class DataController extends Controller
             $idLabel = $row->tipe === 'siswa' ? ($row->nisn ?? '') : ($row->nip ?? '');
 
             return [
-                'id'          => (int) $row->id,
-                'waktu_scan'  => $moment ? $moment->format('Y-m-d H:i:s') : '-',
-                'tanggal'     => $moment ? $moment->format('Y-m-d') : '-',
-                'jam'         => $moment ? $moment->format('H:i') : '-',
-                'nama'        => $row->nama ?? '-',
-                'tipe'        => $row->tipe ?? '-',
+                'id' => (int) $row->id,
+                'waktu_scan' => $moment ? $moment->format('Y-m-d H:i:s') : '-',
+                'tanggal' => $moment ? $moment->format('Y-m-d') : '-',
+                'jam' => $moment ? $moment->format('H:i') : '-',
+                'nama' => $row->nama ?? '-',
+                'tipe' => $row->tipe ?? '-',
                 'id_pengguna' => $idLabel ?: '-',
-                'kelas'       => ($row->nama_kelas ?? ($row->tingkat ?? '-')),
-                'jenis'       => $row->jenis ?? '-',
-                'status'      => $row->status ?? '-',
+                'kelas' => ($row->nama_kelas ?? ($row->tingkat ?? '-')),
+                'jenis' => $row->jenis ?? '-',
+                'status' => $row->status ?? '-',
             ];
         })->values();
 
@@ -111,16 +116,16 @@ class DataController extends Controller
             'data' => $rows,
             'meta' => [
                 'current_page' => $page,
-                'per_page'     => $perPage,
-                'total'        => (int) $total,
-                'last_page'    => (int) ceil($total / $perPage),
-                'from'         => $total > 0 ? min($total, ($page - 1) * $perPage + 1) : 0,
-                'to'           => min($total, $page * $perPage),
+                'per_page' => $perPage,
+                'total' => (int) $total,
+                'last_page' => (int) ceil($total / $perPage),
+                'from' => $total > 0 ? min($total, ($page - 1) * $perPage + 1) : 0,
+                'to' => min($total, $page * $perPage),
             ],
             'filters' => [
                 'start_date' => $startDate ?? '',
-                'end_date'   => $endDate ?? '',
-                'kelas'      => $kelas ?? '',
+                'end_date' => $endDate ?? '',
+                'kelas' => $kelas ?? '',
             ],
             'kelasList' => $kelasList,
         ];
@@ -147,11 +152,11 @@ class DataController extends Controller
     {
         $db = DB::connection('mysql');
 
-        $kelas     = $request->query('kelas');
+        $kelas = $request->query('kelas');
         $startDate = $request->query('start_date');
-        $endDate   = $request->query('end_date');
+        $endDate = $request->query('end_date');
 
-        if (!$kelas) {
+        if (! $kelas) {
             // Kembalikan ke halaman data dengan error sederhana.
             return redirect('/data')->withErrors(['kelas' => 'Pilih kelas terlebih dahulu untuk export.']);
         }
@@ -169,7 +174,7 @@ class DataController extends Controller
         }
 
         $startTs = $dari ? $dari->getTimestamp() : null;
-        $endTs   = $sampai ? $sampai->getTimestamp() : null;
+        $endTs = $sampai ? $sampai->getTimestamp() : null;
 
         // Semua siswa aktif kelas X (sorted by nama).
         $siswa = $db->table('v_scan_lookup')
@@ -190,15 +195,15 @@ class DataController extends Controller
             ->leftJoin('v_scan_lookup as v', 'v.uid', '=', 'r.uid')
             ->where('la.waktu_scan', 'REGEXP', '^[0-9]+$')
             ->where('v.nama_kelas', $kelas)
-            ->when($startTs, fn($q) => $q->whereRaw('CAST(la.waktu_scan AS UNSIGNED) >= ?', [$startTs]))
-            ->when($endTs, fn($q) => $q->whereRaw('CAST(la.waktu_scan AS UNSIGNED) <= ?', [$endTs]))
+            ->when($startTs, fn ($q) => $q->whereRaw('CAST(la.waktu_scan AS UNSIGNED) >= ?', [$startTs]))
+            ->when($endTs, fn ($q) => $q->whereRaw('CAST(la.waktu_scan AS UNSIGNED) <= ?', [$endTs]))
             ->where('la.jenis', 'masuk')
             ->get();
 
         // Map: uid => [ set 'd-m-Y' hadir ]
         $hadirMap = [];
         foreach ($scanRaw as $row) {
-            if (!isset($hadirMap[$row->uid])) {
+            if (! isset($hadirMap[$row->uid])) {
                 $hadirMap[$row->uid] = [];
             }
             $hadirMap[$row->uid][$row->tgl] = true;
@@ -213,9 +218,9 @@ class DataController extends Controller
         }
 
         // Spreadsheet
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Absensi ' . $kelas);
+        $sheet->setTitle('Absensi '.$kelas);
 
         // Tanggal 1-31 mulai kolom E (index 5)
         $colStart = 5;
@@ -223,31 +228,32 @@ class DataController extends Controller
             $letters = '';
             while ($idx > 0) {
                 $mod = ($idx - 1) % 26;
-                $letters = chr(65 + $mod) . $letters;
+                $letters = chr(65 + $mod).$letters;
                 $idx = intval(($idx - $mod) / 26);
             }
+
             return $letters;
         };
 
         // --- Header (baris 1-6) ---
         // Row 1: Judul
-        $sheet->setCellValue('A1', 'DAFTAR HADIR SISWA KELAS ' . $kelas);
-        $lastCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colStart + count($dates) + 4);
-        $sheet->mergeCells('A1:' . $lastCol . '1');
+        $sheet->setCellValue('A1', 'DAFTAR HADIR SISWA KELAS '.$kelas);
+        $lastCol = Coordinate::stringFromColumnIndex($colStart + count($dates) + 4);
+        $sheet->mergeCells('A1:'.$lastCol.'1');
         $sheet->getStyle('A1')->applyFromArray([
             'font' => ['bold' => true, 'size' => 14],
-            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
         ]);
 
         // Row 2: periode
-        $sheet->setCellValue('A2', 'Periode: ' . $dari->format('d/m/Y') . ' - ' . $sampai->format('d/m/Y'));
+        $sheet->setCellValue('A2', 'Periode: '.$dari->format('d/m/Y').' - '.$sampai->format('d/m/Y'));
         $sheet->mergeCells('A2:AN2');
 
         // Row 3: Kelas
         $sheet->setCellValue('C3', 'Kelas');
         $sheet->setCellValue('D3', $kelas);
         $sheet->setCellValue('H3', 'Jumlah');
-        $sheet->setCellValue('I3', $totalSiswa . ' orang');
+        $sheet->setCellValue('I3', $totalSiswa.' orang');
 
         // Row 3: Wali Kelas (kolom kosong)
         $sheet->setCellValue('K3', 'Wali Kelas');
@@ -267,15 +273,15 @@ class DataController extends Controller
 
         foreach ($dates as $i => $dt) {
             $cl = $colLetter($colStart + $i);
-            $sheet->getCell($cl . '5')->setValue((int) $dt->format('j'));
+            $sheet->getCell($cl.'5')->setValue((int) $dt->format('j'));
         }
 
         // Rekap di sebelah kanan tanggal
         $rekapStart = $colStart + count($dates);
 
         // Merge "Rekap" label
-        $sheet->getCell($colLetter($rekapStart) . '5')->setValue('Rekap');
-        $sheet->mergeCells($colLetter($rekapStart) . '5:' . $colLetter($rekapStart) . '6');
+        $sheet->getCell($colLetter($rekapStart).'5')->setValue('Rekap');
+        $sheet->mergeCells($colLetter($rekapStart).'5:'.$colLetter($rekapStart).'6');
 
         // --- Student rows (mulai row 6) ---
         foreach ($siswa as $i => $s) {
@@ -284,10 +290,10 @@ class DataController extends Controller
             $nisn = $s->nisn ?? '';
             $nama = $s->nama ?? '-';
 
-            $sheet->setCellValue('A' . $rowNum, $no);
-            $sheet->setCellValue('B' . $rowNum, $nisn);
-            $sheet->setCellValue('C' . $rowNum, $nama);
-            $sheet->setCellValue('D' . $rowNum, ''); // L/P kosong
+            $sheet->setCellValue('A'.$rowNum, $no);
+            $sheet->setCellValue('B'.$rowNum, $nisn);
+            $sheet->setCellValue('C'.$rowNum, $nama);
+            $sheet->setCellValue('D'.$rowNum, ''); // L/P kosong
 
             $hadirCount = 0;
             $alfaCount = 0;
@@ -300,57 +306,57 @@ class DataController extends Controller
                 $tglKey = $dt->format('Y-m-d');
 
                 if (isset($hadirMap[$s->uid][$tglKey])) {
-                    $sheet->getCell($cl . $rowNum)->setValue('.');
+                    $sheet->getCell($cl.$rowNum)->setValue('.');
                     $hadirCount++;
                 } else {
                     // Tidak ada scan pada tanggal ini = alfa.
-                    $sheet->getCell($cl . $rowNum)->setValue('a');
+                    $sheet->getCell($cl.$rowNum)->setValue('a');
                     $alfaCount++;
                 }
             }
 
             // Rekap kolom: Hadir, Sakit, Izin, Alfa
-            $sheet->getCell($colLetter($rekapStart + 1) . $rowNum)->setValue($hadirCount);
-            $sheet->getCell($colLetter($rekapStart + 2) . $rowNum)->setValue($sakitCount);
-            $sheet->getCell($colLetter($rekapStart + 3) . $rowNum)->setValue($izinCount);
-            $sheet->getCell($colLetter($rekapStart + 4) . $rowNum)->setValue($alfaCount);
+            $sheet->getCell($colLetter($rekapStart + 1).$rowNum)->setValue($hadirCount);
+            $sheet->getCell($colLetter($rekapStart + 2).$rowNum)->setValue($sakitCount);
+            $sheet->getCell($colLetter($rekapStart + 3).$rowNum)->setValue($izinCount);
+            $sheet->getCell($colLetter($rekapStart + 4).$rowNum)->setValue($alfaCount);
         }
 
         // --- Rekap kolom header (row 5) ---
-        $sheet->getCell($colLetter($rekapStart + 1) . '5')->setValue('Hadir');
-        $sheet->getCell($colLetter($rekapStart + 2) . '5')->setValue('Sakit');
-        $sheet->getCell($colLetter($rekapStart + 3) . '5')->setValue('Izin');
-        $sheet->getCell($colLetter($rekapStart + 4) . '5')->setValue('Alfa');
+        $sheet->getCell($colLetter($rekapStart + 1).'5')->setValue('Hadir');
+        $sheet->getCell($colLetter($rekapStart + 2).'5')->setValue('Sakit');
+        $sheet->getCell($colLetter($rekapStart + 3).'5')->setValue('Izin');
+        $sheet->getCell($colLetter($rekapStart + 4).'5')->setValue('Alfa');
 
         // Gaya header kolom tanggal
-        $sheet->getStyle($colLetter($colStart) . '5:' . $colLetter($colStart + count($dates) - 1) . '5')
+        $sheet->getStyle($colLetter($colStart).'5:'.$colLetter($colStart + count($dates) - 1).'5')
             ->applyFromArray([
-                'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'FFE5B4']],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'FFE5B4']],
                 'font' => ['bold' => true],
-                'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
             ]);
 
         // Gaya header tabel (A5:D5)
         $sheet->getStyle('A5:D5')->applyFromArray([
-            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'FFE5B4']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'FFE5B4']],
             'font' => ['bold' => true],
         ]);
 
         // Warna sel rekap header (Hadir=Biru, Sakit=Merah, Izin=Kuning, Alfa=Abu)
-        $sheet->getStyle($colLetter($rekapStart + 1) . '5')->applyFromArray([
-            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => '4472C4']],
+        $sheet->getStyle($colLetter($rekapStart + 1).'5')->applyFromArray([
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '4472C4']],
             'font' => ['color' => ['rgb' => 'FFFFFF'], 'bold' => true],
         ]);
-        $sheet->getStyle($colLetter($rekapStart + 2) . '5')->applyFromArray([
-            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'ED7D31']],
+        $sheet->getStyle($colLetter($rekapStart + 2).'5')->applyFromArray([
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'ED7D31']],
             'font' => ['color' => ['rgb' => 'FFFFFF'], 'bold' => true],
         ]);
-        $sheet->getStyle($colLetter($rekapStart + 3) . '5')->applyFromArray([
-            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => '70AD47']],
+        $sheet->getStyle($colLetter($rekapStart + 3).'5')->applyFromArray([
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '70AD47']],
             'font' => ['color' => ['rgb' => 'FFFFFF'], 'bold' => true],
         ]);
-        $sheet->getStyle($colLetter($rekapStart + 4) . '5')->applyFromArray([
-            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'FFEB3B']],
+        $sheet->getStyle($colLetter($rekapStart + 4).'5')->applyFromArray([
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'FFEB3B']],
             'font' => ['color' => ['rgb' => '000000'], 'bold' => true],
         ]);
 
@@ -364,8 +370,8 @@ class DataController extends Controller
         }
 
         // --- Output download ---
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $fileName = 'absensi_' . $kelas . '_' . $dari->format('Ymd') . '_' . $sampai->format('Ymd') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'absensi_'.$kelas.'_'.$dari->format('Ymd').'_'.$sampai->format('Ymd').'.xlsx';
 
         ob_start();
         $writer->save('php://output');
@@ -373,7 +379,7 @@ class DataController extends Controller
 
         return response($content, 200, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
             'Content-Length' => strlen($content),
         ]);
     }

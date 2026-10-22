@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Pengguna extends Model
 {
     protected $table = 'pengguna';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -18,9 +19,9 @@ class Pengguna extends Model
     ];
 
     protected $casts = [
-        'tipe'         => 'string',
-        'nama'         => 'string',
-        'foto_path'    => 'string',
+        'tipe' => 'string',
+        'nama' => 'string',
+        'foto_path' => 'string',
         'status_aktif' => 'string',
     ];
 

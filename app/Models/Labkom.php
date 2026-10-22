@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Labkom extends Model
 {
     protected $table = 'labkom';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -19,10 +20,10 @@ class Labkom extends Model
     ];
 
     protected $casts = [
-        'lokasi_id'      => 'int',
+        'lokasi_id' => 'int',
         'total_komputer' => 'int',
-        'jumlah_baris'   => 'int',
-        'jumlah_kolom'   => 'int',
+        'jumlah_baris' => 'int',
+        'jumlah_kolom' => 'int',
     ];
 
     public function lokasi(): BelongsTo

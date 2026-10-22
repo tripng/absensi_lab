@@ -38,18 +38,39 @@ class MasterDataController extends Controller
     ];
 
     /**
-     * Render halaman master data dengan semua list + konfig form.
+     * Render dashboard master data (tanpa entity) atau halaman per entity.
+     * Dashboard tetap mengirim semua list agar ringkasan + test existing utuh.
      */
-    public function index(): Response
+    public function index(Request $request, ?string $entity = null): Response
     {
-        return Inertia::render('MasterData/Index', [
+        if ($entity === null) {
+            return Inertia::render('MasterData/Index', [
+                'tabs' => self::TABS,
+                'guruList' => $this->guruList(),
+                'kelasList' => $this->kelasList(),
+                'ruangList' => $this->ruangList(),
+                'mapelList' => $this->mapelList(),
+                'formConfig' => $this->formConfig(),
+                'success' => session('success'),
+            ]);
+        }
+
+        $this->ensureEntity($entity);
+        $listKey = $entity.'List';
+        $search = $entity === 'guru' ? trim((string) $request->query('search', '')) : null;
+
+        $props = [
             'tabs' => self::TABS,
-            'guruList' => $this->guruList(),
-            'kelasList' => $this->kelasList(),
-            'ruangList' => $this->ruangList(),
-            'mapelList' => $this->mapelList(),
+            $listKey => $entity === 'guru' ? $this->guruList($search) : $this->{$listKey}(),
             'formConfig' => $this->formConfig(),
-        ]);
+            'success' => session('success'),
+        ];
+
+        if ($entity === 'guru') {
+            $props['search'] = $search;
+        }
+
+        return Inertia::render('MasterData/'.ucfirst($entity).'/Index', $props);
     }
 
     public function store(Request $request, string $entity)
@@ -58,7 +79,7 @@ class MasterDataController extends Controller
         $validated = $request->validate($this->rules($entity));
         $this->createRecord($entity, $validated);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil ditambahkan.');
+        return redirect("/master-data/{$entity}")->with('success', ucfirst($entity).' berhasil ditambahkan.');
     }
 
     public function update(Request $request, string $entity, $id)
@@ -67,7 +88,7 @@ class MasterDataController extends Controller
         $validated = $request->validate($this->rules($entity, (int) $id));
         $this->updateRecord($entity, $id, $validated);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil diperbarui.');
+        return redirect("/master-data/{$entity}")->with('success', ucfirst($entity).' berhasil diperbarui.');
     }
 
     public function destroy(Request $request, string $entity, $id)
@@ -75,7 +96,7 @@ class MasterDataController extends Controller
         $this->ensureEntity($entity);
         $this->deleteRecord($entity, $id);
 
-        return redirect()->route('master-data')->with('success', ucfirst($entity).' berhasil dihapus.');
+        return redirect("/master-data/{$entity}")->with('success', ucfirst($entity).' berhasil dihapus.');
     }
 
     /** Abort 404 bila entity bukan tab yang didukung. */
@@ -89,9 +110,9 @@ class MasterDataController extends Controller
     // ------------------------------------------------------------------
     // List helpers (kirim ke UI sebagai props tabel).
     // ------------------------------------------------------------------
-    protected function guruList(): array
+    protected function guruList(?string $search = null): array
     {
-        return Guru::query()
+        $rows = Guru::query()
             ->with('pengguna')
             ->orderBy('id')
             ->get(['id', 'nip', 'jabatan'])
@@ -101,8 +122,15 @@ class MasterDataController extends Controller
                 'nip' => $g->nip,
                 'jabatan' => $g->jabatan,
             ])
-            ->values()
-            ->all();
+            ->values();
+
+        if ($search !== null && $search !== '') {
+            $needle = mb_strtolower($search);
+            $rows = $rows->filter(fn (array $g) => str_contains(mb_strtolower((string) $g['nama']), $needle)
+                || str_contains(mb_strtolower((string) $g['nip']), $needle));
+        }
+
+        return $rows->values()->all();
     }
 
     protected function kelasList(): array
@@ -183,7 +211,7 @@ class MasterDataController extends Controller
         return [
             'guru' => [
                 ['name' => 'nama',      'label' => 'Nama Lengkap', 'type' => 'text',   'required' => true],
-                ['name' => 'nip',       'label' => 'NIP',          'type' => 'text',   'required' => true, 'unique' => 'guru.nip'],
+                ['name' => 'nip',       'label' => 'NIP',          'type' => 'text',   'required' => false, 'unique' => 'guru.nip'],
                 ['name' => 'jabatan',   'label' => 'Jabatan',      'type' => 'text'],
             ],
             'kelas' => [
@@ -218,7 +246,7 @@ class MasterDataController extends Controller
         return match ($entity) {
             'guru' => [
                 'nama' => ['required', 'string', 'max:255'],
-                'nip' => ['required', 'string', 'max:50', Rule::unique('guru', 'nip')->ignore($id)],
+                'nip' => ['nullable', 'string', 'max:50', Rule::unique('guru', 'nip')->ignore($id)],
                 'jabatan' => ['nullable', 'string', 'max:255'],
             ],
             'kelas' => [
@@ -256,7 +284,7 @@ class MasterDataController extends Controller
                     ]);
                     Guru::query()->insert([
                         'id' => $penggunaId,
-                        'nip' => $v['nip'],
+                        'nip' => $v['nip'] ?? '',
                         'jabatan' => $v['jabatan'] ?? null,
                     ]);
                 })(),
@@ -287,7 +315,7 @@ class MasterDataController extends Controller
                 'guru' => (function () use ($id, $v) {
                     DB::table('pengguna')->where('id', $id)->update(['nama' => $v['nama']]);
                     Guru::query()->where('id', $id)->update([
-                        'nip' => $v['nip'],
+                        'nip' => $v['nip'] ?? '',
                         'jabatan' => $v['jabatan'] ?? null,
                     ]);
                 })(),

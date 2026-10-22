@@ -109,7 +109,7 @@ class LogAksesController extends Controller
 
         // Bulk insert — insertOrIgnore as safety net (covers race conditions)
         $inserted = 0;
-        if (!empty($newRecords)) {
+        if (! empty($newRecords)) {
             $inserted = DB::table('log_akses')->insertOrIgnore($newRecords);
         }
 

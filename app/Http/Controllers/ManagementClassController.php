@@ -163,7 +163,7 @@ class ManagementClassController extends Controller
             ]);
         }
 
-        return redirect()->route('management-class');
+        return redirect()->route('management-schedule');
     }
 
     /**
@@ -206,7 +206,7 @@ class ManagementClassController extends Controller
             ]);
         }
 
-        return redirect()->route('management-class');
+        return redirect()->route('management-schedule');
     }
 
     /**
@@ -225,7 +225,7 @@ class ManagementClassController extends Controller
             JadwalAjaran::where('id', $schedule)->delete();
         }
 
-        return redirect()->route('management-class');
+        return redirect()->route('management-schedule');
     }
 
     /**

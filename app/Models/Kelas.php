@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Kelas extends Model
 {
     protected $table = 'kelas';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -19,8 +20,8 @@ class Kelas extends Model
     ];
 
     protected $casts = [
-        'nama_kelas'   => 'string',
-        'tingkat'      => 'string',
+        'nama_kelas' => 'string',
+        'tingkat' => 'string',
         'tahun_ajaran' => 'string',
     ];
 
