@@ -19,6 +19,13 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/docs', fn () => view('swagger'));
+
+Route::get('/api/openapi.yaml', fn () => response()->file(
+    resource_path('docs/openapi.yaml'),
+    ['Content-Type' => 'application/yaml'],
+));
+
 Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi');
 Route::get('/data', [DataController::class, 'index'])->name('data');
 Route::get('/data/export', [DataController::class, 'export'])->name('data.export');
