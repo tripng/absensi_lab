@@ -58,6 +58,12 @@ class MasterTablesSeeder extends Seeder
             ]);
         }
 
+        DB::table('rfid_card')->insert([
+            'uid' => 'DEV-RFID-0001',
+            'pengguna_id' => DB::table('guru')->value('id'),
+            'status' => 'aktif',
+        ]);
+
         // --- labkom + ruang_ajaran ---
         DB::table('labkom')->insert([
             'lokasi_id' => $labkomLokasiId,
