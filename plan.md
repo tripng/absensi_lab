@@ -150,7 +150,7 @@ Diagnosa dan membetulkan API absensi_lab (`POST /api/log-akses/batch`) yang berh
 |---|---|---|---|
 | 1 | `fix(api): recreate Sanctum API token via api:token command` | `.env` (runtime) | Jalankan `php artisan api:token "scan-app" --user-email=admin@absensi.com --save-to-env=SCAN_APP_TOKEN`. Verifikasi `SELECT COUNT(*) FROM personal_access_tokens` = 1. |
 | 2 | `fix(api): seed rfid_card reference data in MasterTablesSeeder` | `database/seeders/MasterTablesSeeder.php` | Tambahkan ≥1 `rfid_card` record yang valid (uid + pengguna_id seeded + status 'aktif'). Cukup 1 record untuk dev/test agar `exists:rfid_card,id` punya nilai TRUE. |
-| 3 | `chore(api): restore rfid_card + log_akses data from presensi_rfid.db` | `database/scripts/migrate_rfid_from_sqlite.php` (baru) | One-off script: migrasi 4 rfid_card + 20 log_akses dari SQLite lama → MySQL. Handle mapping pengguna_id lama→baru (lihat D3). Jalankan `php database/scripts/migrate_rfid_from_sqlite.php`. |
+| 3 | ~~`chore(api): restore rfid_card + log_akses data from presensi_rfid.db`~~ | — | ⛔ **SKIP** — mapping old nisn/nip → MySQL hasilkan 0 match (lihat Q2). Pengguna memilih opsi (a) seed minimal di task 2. Data lama (presensi_rfid.db) tidak direstore. Tidak ada file dibuat. |
 | 4 | `test(api): add Pest LogAksesApiTest` | `tests/Feature/Api/LogAksesApiTest.php` (baru) | Health endpoint 200; batch dengan token valid + rfid_card ada → 200 + `success=true`; batch dengan rfid_id tidak ada → 422. |
 | 5 | `test(api): add verify-api-fix.mjs smoke test` | `tests/verify-api-fix.mjs` (baru) | curl-based: health 200, batch tanpa token 401, batch dengan token+rfid_id valid 200, batch dengan rfid_id tidak ada 422. |
 | 6 | `chore(api): pint + build + full test gate` | laporan hijau | `./vendor/bin/pint`; `npm run build`; `php artisan test` (69+ passed termasuk LogAksesApiTest baru). |
@@ -263,7 +263,33 @@ pkill -f "php artisan serve --port=8765"
 
 1. **Q1 (sumber rfid_card data):** → **Seed minimal.** Cukup 1 `rfid_card` record di `MasterTablesSeeder` untuk dev/test agar `exists:rfid_card,id` punya nilai benar. Full restore data lama (task 3) bersifat optional.
 
-2. **Q2 (mapping ID lama → baru):** → **Mapping by nisn/nip.** Old DB punya 607 pengguna (ID 1–607); MySQL baru punya 7 (ID 1–7). Old rfid_card FK ke pengguna_id 1,2,3,598 — tidak ada di MySQL. Untuk restore data lama (task 3), mapping harus via field unik `nisn`/`nip`, bukan ID numerik.
+2. **Q2 (mapping ID lama → baru):** → **SKIP — keputusan: opsi (a).** Mapping old nisn/nip → MySQL hasilkan 0 match (lihat tabel di bawah). Pengguna memilih opsi (a): **lewati task 3**, cukup seed minimal di task 2. Data lama (`presensi_rfid.db`) tidak direstore. Tanpa keputusan ini, task 3 akan tetap BLOCKED per AGENT.md rule 3.
+
+**Old DB** (`presensi_rfid.db`) — 4 rfid_card:
+
+| uid | old pengguna_id | tipe | nisn/nip |
+|---|---|---|---|
+| `0006030620` | 2 | siswa | nisn=115571177 |
+| `0002612308` | 1 | siswa | nisn=3117754351 |
+| `0006091809` | 3 | siswa | nisn=112395623 |
+| `0006477330` | 598 | guru | nip=198108202023211009 |
+
+**MySQL sekarang** — 7 pengguna, tidak ada nisn/nip yang cocok:
+
+| id | tipe | nama | nisn | nip |
+|---|---|---|---|---|
+| 1 | guru | Rina Sari, S.Kom. | NULL | 198001012005011001 |
+| 6 | siswa | Ahmad Fauzi | 0061234567 | NULL |
+| 7 | siswa | Siti Nurhaliza | 0067654321 | NULL |
+| ... | ... (5 guru + 2 siswa) | — | — | — |
+
+**Konsekuensi:** 4 rfid_card lama FK ke pengguna_id yang tidak ada di MySQL → `insert` akan gagal (FK constraint). 20 log_akses juga gagal (FK rfid_id). Tanpa membuat/meng-upsert 4 pengguna lama, restore data lama **tidak mungkin** tanpa keluar dari plan (membuat user baru ≠ seed minimal, ≠ "tidak ubah skema").
+
+**Opsi:**
+- **(a) Lewati task 3** (rekomendasi — sudah optional di plan §5). Seed minimal 1 rfid_card di task 2 cukup untuk API berfungsi. Data lama dibiarkan.
+- **(b) Ijin khusus:** buat 4 pengguna lama di `pengguna` + `siswa`/`guru` tables sebagai bagian restore (task 3), sehingga FK valid. Ini berarti menambah data master (bukan schema change) — **perlu approval eksplisit pengguna** karena keluar dari "seed minimal" rekomendasi.
+
+Per AGENT.md rule 3: tanpa keputusan (a) atau (b), task 3 akan tetap **BLOCKED**. **Keputusan sudah diambil:** opsi (a) — task 3 dilewati, data lama tidak direstore. ✅
 
 3. **Q3 (token persistence):** **Dilanjutkan.** Pertahankan `--save-to-env` pola. `.env` plaintext adalah accepted risk untuk dev; production gunakan env server variable.
 
