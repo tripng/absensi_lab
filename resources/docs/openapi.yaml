@@ -1,0 +1,206 @@
+openapi: 3.0.3
+info:
+  title: absensi_lab Log Akses API
+  version: 1.0.0
+  description: |
+    API untuk aplikasi scan eksternal yang mengirim data log akses RFID
+    ke absensi_lab.
+
+    - `GET /api/log-akses/health` bersifat publik (tanpa autentikasi).
+    - `POST /api/log-akses/batch` memerlukan Bearer token Sanctum.
+servers:
+  - url: http://localhost:8000
+    description: Server lokal
+  - url: http://127.0.0.1:8000
+    description: Server lokal (loopback)
+tags:
+  - name: Log Akses
+    description: Endpoint penerimaan log akses RFID
+paths:
+  /api/log-akses/health:
+    get:
+      tags:
+        - Log Akses
+      summary: Health check
+      description: Memeriksa apakah service log akses berjalan.
+      operationId: logAksesHealth
+      responses:
+        '200':
+          description: Service sehat
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - timestamp
+                  - service
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: '2026-10-22T11:47:00+07:00'
+                  service:
+                    type: string
+                    example: absensi_lab-log-akses-api
+  /api/log-akses/batch:
+    post:
+      tags:
+        - Log Akses
+      summary: Kirim batch log akses
+      description: |
+        Menyimpan sekumpulan record log akses dalam satu request.
+
+        Duplikasi dideteksi berdasarkan kombinasi `rfid_id`, `lokasi_id`, dan
+        `waktu_scan`. Record yang sudah ada dilewati dan dilaporkan pada field
+        `duplicates`.
+      operationId: logAksesStoreBatch
+      security:
+        - sanctum: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/LogAksesItem'
+            example:
+              data:
+                - rfid_id: 1
+                  lokasi_id: 1
+                  jenis: masuk
+                  waktu_scan: '1700000000'
+                  status: berhasil
+                  keterangan: null
+      responses:
+        '200':
+          description: Batch diproses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponse'
+              example:
+                success: true
+                message: All records inserted successfully.
+                inserted: 1
+                duplicates: 0
+                total_received: 1
+        '401':
+          description: Token tidak ada atau tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unauthenticated.
+        '422':
+          description: Validasi gagal atau batch kosong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                message: The data field is required.
+                errors:
+                  data:
+                    - The data field is required.
+components:
+  securitySchemes:
+    sanctum:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum token
+      description: |
+        Personal access token Sanctum. Kirim sebagai
+        `Authorization: Bearer <token>`.
+  schemas:
+    LogAksesItem:
+      type: object
+      required:
+        - rfid_id
+        - lokasi_id
+        - jenis
+        - waktu_scan
+        - status
+      properties:
+        rfid_id:
+          type: integer
+          description: ID kartu RFID (referensi tabel `rfid_card`).
+          example: 1
+        lokasi_id:
+          type: integer
+          description: ID lokasi (referensi tabel `lokasi`).
+          example: 1
+        jenis:
+          type: string
+          enum:
+            - masuk
+            - keluar
+          example: masuk
+        waktu_scan:
+          type: string
+          pattern: '^[0-9]+$'
+          description: Waktu scan dalam bentuk string numerik (Unix timestamp).
+          example: '1700000000'
+        status:
+          type: string
+          example: berhasil
+        keterangan:
+          type: string
+          nullable: true
+          example: null
+    BatchResponse:
+      type: object
+      required:
+        - success
+        - message
+        - inserted
+        - duplicates
+        - total_received
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: All records inserted successfully.
+        inserted:
+          type: integer
+          description: Jumlah record baru yang benar-benar dimasukkan.
+          example: 1
+        duplicates:
+          type: integer
+          description: Jumlah record yang sudah ada dan dilewati.
+          example: 0
+        total_received:
+          type: integer
+          description: Jumlah record yang diterima pada request.
+          example: 1
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Unauthenticated.
+    ValidationErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The data field is required.
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
