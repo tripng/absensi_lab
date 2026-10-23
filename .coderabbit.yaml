@@ -1,0 +1,70 @@
+# CodeRabbit configuration for absensi_lab
+# Project: Laravel 12 + Inertia.js (React 18) + Vite + Tailwind CSS 3
+# AI-powered automated code reviews for pull requests
+# @see https://docs.coderabbit.ai
+
+language: "id"  # Indonesian — matches team convention
+description: "Laravel 12 + Inertia.js (React 18) + Vite + Tailwind CSS 3 attendance lab application. Backend in PHP/Laravel, frontend in TypeScript/React."
+
+# Review settings
+reviews:
+  profile: "chill"  # Balanced review tone
+  state: "comments"  # Leave comments only, don't auto-approve
+  auto_review:
+    enabled: true
+    target: "self"  # Auto-review PRs from bots/automation only
+
+  # Focus areas for this tech stack
+  focus:
+    - "php"
+    - "javascript"
+    - "typescript"
+    - "react"
+    - "security"
+    - "performance"
+
+  # Path-based review settings
+  path_review_settings:
+    - path: "app/"
+      settings:
+        summary: true
+        code_review: true
+        verification: true
+    - path: "resources/js/"
+      settings:
+        summary: true
+        code_review: true
+        verification: true
+    - path: "routes/"
+      settings:
+        summary: true
+        code_review: true
+    - path: "tests/"
+      settings:
+        summary: true
+        code_review: true
+        verification: true
+    - path: "database/migrations/"
+      settings:
+        summary: true
+        code_review: true
+    - path: "database/seeders/"
+      settings:
+        summary: true
+        code_review: true
+
+# Ignore patterns — don't review generated/vendor code
+ignore:
+  - "vendor/**"
+  - "node_modules/**"
+  - "public/build/**"
+  - "storage/**"
+  - "bootstrap/cache/**"
+  - "public/img/**"  # Generated photos from RFID scanner
+  - ".git/**"
+  - "composer.lock"
+  - "package-lock.json"
+
+# Commit status checks — CodeRabbit will report pass/fail
+commit_status:
+  enabled: true
